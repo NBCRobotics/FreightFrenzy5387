@@ -26,6 +26,8 @@ public class FFTeleOp extends OpMode {
         telemetry.addData("Drive Motors: ", "Front Left: " +robot.getFrontLeftPower()+
                 " Front Right: " + robot.getFrontRightPower() + "\n Back Left: " + robot.getBackLeftPower() +
                 " Back Right: " + robot.getBackRightPower());
+        telemetry.addData("Game Pad: ", gamepad1.left_stick_y + " " +gamepad1.left_stick_x+ " "
+                +gamepad1.right_stick_x+ " " +gamepad1.right_stick_y);
         telemetry.update();
     }
     //TEST ONE

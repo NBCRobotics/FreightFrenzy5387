@@ -48,6 +48,13 @@ public class FFRobot {
         this.drive(bothPow,bothPow);
     }
 
+    public void strafe(double pow){
+        blDrive.setPower(-pow);
+        flDrive.setPower(pow);
+        brDrive.setPower(pow);
+        frDrive.setPower(-pow);
+    }
+
     public void mechanumPov(Gamepad gp){
         double drive = (double) (gp.left_stick_y);
         double turn = (double) ((gp.left_stick_x) * -1);
@@ -67,6 +74,10 @@ public class FFRobot {
             nor = Math.max(Math.abs(backRightPower), nor);
 
         }
+        this.flDrive.setPower(frontLeftPower);
+        this.blDrive.setPower(backLeftPower);
+        this.frDrive.setPower(frontRightPower);
+        this.brDrive.setPower(backRightPower);
 
     }
     public double getFrontLeftPower(){
