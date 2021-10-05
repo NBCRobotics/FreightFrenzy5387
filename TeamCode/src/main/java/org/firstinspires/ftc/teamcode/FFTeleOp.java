@@ -28,6 +28,7 @@ public class FFTeleOp extends OpMode {
                 " Back Right: " + robot.getBackRightPower());
         telemetry.addData("Game Pad: ", gamepad1.left_stick_y + " " +gamepad1.left_stick_x+ " "
                 +gamepad1.right_stick_x+ " " +gamepad1.right_stick_y);
+        telemetry.addData("Servo", gamepad1.right_bumper + "-----" +robot.getServo());
         telemetry.update();
     }
     //TEST ONE

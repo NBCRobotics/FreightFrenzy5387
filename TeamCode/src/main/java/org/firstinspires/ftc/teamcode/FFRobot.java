@@ -13,11 +13,16 @@ public class FFRobot {
     private DcMotor brDrive = null;
     private DcMotor flDrive = null;
     private DcMotor frDrive = null;
+    private Servo leftHook = null;
+
 
     private DcMotor[] motors;
 
     DcMotorSimple.Direction motF = DcMotorSimple.Direction.FORWARD;
     DcMotorSimple.Direction motR = DcMotorSimple.Direction.REVERSE;
+    Servo.Direction serR = Servo.Direction.REVERSE;
+    Servo.Direction serF = Servo.Direction.FORWARD;
+
 
     public void init(HardwareMap hwdMap){
         this.motors = new DcMotor[] {blDrive,brDrive,flDrive,frDrive};
@@ -26,11 +31,18 @@ public class FFRobot {
         this.brDrive = hwdMap.get(DcMotor.class, "brDrive");
         this.flDrive = hwdMap.get(DcMotor.class, "flDrive");
         this.frDrive = hwdMap.get(DcMotor.class, "frDrive");
+        this.leftHook = hwdMap.get(Servo.class, "leftHook");
+
+//        this.blDrive.setDirection(motF);
+//        this.brDrive.setDirection(motR);
+//        this.flDrive.setDirection(motF);
+//        this.frDrive.setDirection(motR);
 
         this.blDrive.setDirection(motF);
-        this.brDrive.setDirection(motF);
+        this.brDrive.setDirection(motR);
         this.flDrive.setDirection(motF);
-        this.frDrive.setDirection(motF);
+        this.frDrive.setDirection(motR);
+        this.leftHook.setDirection(serR);
     }
     public void leftPow(double pow){
         this.blDrive.setPower(pow);
@@ -60,12 +72,23 @@ public class FFRobot {
         double turn = (double) ((gp.left_stick_x) * -1);
         double strafe = (double) ((gp.right_stick_x) * -1);
 
+
         double nor = 0.0;
 
         double frontLeftPower = (drive + turn + strafe);
         double backLeftPower = (drive - turn + strafe);
         double frontRightPower = (drive - turn - strafe);
         double backRightPower = (drive + turn - strafe);
+
+        double y = gp.left_stick_y; // Remember, this is reversed!
+        double x = -gp.left_stick_x * 1.1;
+        double rx = -gp.right_stick_x;
+        double deno = Math.max(Math.abs(y) + Math.abs(x) + Math.abs(rx), 1);
+
+        double newflPower = y + x + rx;
+        double newblPower = y - x + rx;
+        double newfrPower = y - x - rx;
+        double newbrPower = y + x - rx;
 
         if(Math.abs(backRightPower) > 1 || Math.abs(backLeftPower) > 1 ||
                 Math.abs(frontRightPower) > 1 || Math.abs(frontLeftPower) > 1) {
@@ -74,10 +97,17 @@ public class FFRobot {
             nor = Math.max(Math.abs(backRightPower), nor);
 
         }
-        this.flDrive.setPower(frontLeftPower);
-        this.blDrive.setPower(backLeftPower);
-        this.frDrive.setPower(frontRightPower);
-        this.brDrive.setPower(backRightPower);
+        foundHooks(gp);
+        this.flDrive.setPower(newflPower);
+        this.blDrive.setPower(newblPower);
+        this.frDrive.setPower(newfrPower);
+        this.brDrive.setPower(newbrPower);
+
+
+//        this.brDrive.setPower(frontLeftPower);
+//        this.brDrive.setPower(backLeftPower);
+//        this.brDrive.setPower(frontRightPower);
+//        this.brDrive.setPower(backRightPower);
 
     }
     public double getFrontLeftPower(){
@@ -96,5 +126,30 @@ public class FFRobot {
         this.drive(0.0);
 
     }
+
+    public void hookDown()
+    {
+        leftHook.setPosition(0.4);
+        //.position = 0.72
+    }
+
+    public void hookUp()
+    {
+        leftHook.setPosition(0.01);
+       // this.rightHook?.position = 0.21
+    }
+
+    public void foundHooks(Gamepad gp) {
+        if (gp.right_bumper) { //hook down
+            hookDown();
+        } else { //default position
+            hookUp();
+        }
+
+    }
+    public double getServo(){
+        return leftHook.getPosition();
+    }
+
 
 }
