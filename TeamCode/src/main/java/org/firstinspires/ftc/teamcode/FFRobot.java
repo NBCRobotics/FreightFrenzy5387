@@ -7,8 +7,9 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
-
+//created by Sucheth Seethella
 public class FFRobot {
+    //note that the motors are now all in a single row
     private DcMotor blDrive = null;
     private DcMotor brDrive = null;
     private DcMotor flDrive = null;
@@ -16,10 +17,10 @@ public class FFRobot {
     private Servo leftHook = null;
 
 
-    private DcMotor[] motors;
+    private DcMotor[] motors; //array of motors
 
-    DcMotorSimple.Direction motF = DcMotorSimple.Direction.FORWARD;
-    DcMotorSimple.Direction motR = DcMotorSimple.Direction.REVERSE;
+    DcMotorSimple.Direction motF = DcMotorSimple.Direction.FORWARD; //setting directions
+    DcMotorSimple.Direction motR = DcMotorSimple.Direction.REVERSE; //i.e., motR is now the reverse direction
     Servo.Direction serR = Servo.Direction.REVERSE;
     Servo.Direction serF = Servo.Direction.FORWARD;
 
@@ -38,7 +39,7 @@ public class FFRobot {
 //        this.flDrive.setDirection(motF);
 //        this.frDrive.setDirection(motR);
 
-        this.blDrive.setDirection(motF);
+        this.blDrive.setDirection(motF); //as declared before motF is forward motR is reverse
         this.brDrive.setDirection(motR);
         this.flDrive.setDirection(motF);
         this.frDrive.setDirection(motR);
@@ -56,7 +57,7 @@ public class FFRobot {
         this.leftPow(lPow);
         this.rightPow(rPow);
     }
-    public void drive(double bothPow){
+    public void drive(double bothPow){ //override of drive(double, double)
         this.drive(bothPow,bothPow);
     }
 
@@ -73,7 +74,7 @@ public class FFRobot {
         double strafe = (double) ((gp.right_stick_x) * -1);
 
 
-        double nor = 0.0;
+        double nor = 0.0; //normal drive power
 
         double frontLeftPower = (drive + turn + strafe);
         double backLeftPower = (drive - turn + strafe);
@@ -83,7 +84,7 @@ public class FFRobot {
         double y = gp.left_stick_y; // Remember, this is reversed!
         double x = -gp.left_stick_x * 1.1;
         double rx = -gp.right_stick_x;
-        double deno = Math.max(Math.abs(y) + Math.abs(x) + Math.abs(rx), 1);
+        //double deno = Math.max(Math.abs(y) + Math.abs(x) + Math.abs(rx), 1); //denominator
 
         double newflPower = y + x + rx;
         double newblPower = y - x + rx;
@@ -95,6 +96,15 @@ public class FFRobot {
             nor = Math.max(Math.abs(frontLeftPower), Math.abs(backLeftPower));
             nor = Math.max(Math.abs(frontRightPower), nor);
             nor = Math.max(Math.abs(backRightPower), nor);
+
+            /*nor = Math.max(Math.abs(frontLeftPower), Math.abs(backLeftPower),
+                             Math.abs(frontRightPower), Math.abs(backRightPower),
+                             nor); can we use this instead for lines 96-98
+                             if any one motor has their magnitude of power go over 1,
+                             the normal drive power will be set to the greatest power
+                             of the 4 motors, or nor if nor is greater(in this version of the code nor
+                             will never be greater)
+             */
 
         }
         foundHooks(gp);
@@ -124,7 +134,6 @@ public class FFRobot {
     }
     public void brake(){
         this.drive(0.0);
-
     }
 
     public void hookDown()
@@ -141,9 +150,9 @@ public class FFRobot {
 
     public void foundHooks(Gamepad gp) {
         if (gp.right_bumper) { //hook down
-            hookDown();
+            hookDown(); //0.4
         } else { //default position
-            hookUp();
+            hookUp(); //0.01
         }
 
     }
