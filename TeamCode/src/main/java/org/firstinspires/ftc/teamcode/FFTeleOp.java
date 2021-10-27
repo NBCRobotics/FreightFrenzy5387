@@ -15,7 +15,7 @@ public class FFTeleOp extends OpMode {
 
         robot.init(hardwareMap);
 
-        //testung more
+        //testing more
 
 
     }
@@ -29,6 +29,7 @@ public class FFTeleOp extends OpMode {
         telemetry.addData("Game Pad: ", gamepad1.left_stick_y + " " +gamepad1.left_stick_x+ " "
                 +gamepad1.right_stick_x+ " " +gamepad1.right_stick_y);
         telemetry.addData("Servo", gamepad1.right_bumper + "-----" +robot.getServo());
+        //above labels all motors, servos, etc.
         telemetry.update();
     }
     //TEST ONE

@@ -14,7 +14,7 @@ public class FFRobot {
     private DcMotor brDrive = null;
     private DcMotor flDrive = null;
     private DcMotor frDrive = null;
-    private Servo leftHook = null;
+    private Servo leftHook = null; //Tesrng btiyuc
     //COmments
 
     private DcMotor[] motors; //array of motors
@@ -93,9 +93,13 @@ public class FFRobot {
 
         if(Math.abs(backRightPower) > 1 || Math.abs(backLeftPower) > 1 ||
                 Math.abs(frontRightPower) > 1 || Math.abs(frontLeftPower) > 1) {
+
+            //sets normal speed to greatest magnitude of drive power level(to normalize all power)
             nor = Math.max(Math.abs(frontLeftPower), Math.abs(backLeftPower));
             nor = Math.max(Math.abs(frontRightPower), nor);
             nor = Math.max(Math.abs(backRightPower), nor);
+
+
 
             /*nor = Math.max(Math.abs(frontLeftPower), Math.abs(backLeftPower),
                              Math.abs(frontRightPower), Math.abs(backRightPower),
