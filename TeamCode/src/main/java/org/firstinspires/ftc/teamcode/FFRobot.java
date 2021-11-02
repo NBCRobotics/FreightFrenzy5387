@@ -13,7 +13,8 @@ public class FFRobot {
     private DcMotor blDrive = null;
     private DcMotor brDrive = null;
     private DcMotor flDrive = null;
-    private DcMotor frDrive = null;
+    //private DcMotor frDrive = null;
+    private DcMotor intake = null;
     private Servo leftHook = null; //Tesrng btiyuc
     //COmments
 
@@ -26,13 +27,14 @@ public class FFRobot {
 
 
     public void init(HardwareMap hwdMap){
-        this.motors = new DcMotor[] {blDrive,brDrive,flDrive,frDrive};
+        //this.motors = new DcMotor[] {blDrive,brDrive,flDrive,frDrive};
 
         this.blDrive = hwdMap.get(DcMotor.class, "blDrive");
         this.brDrive = hwdMap.get(DcMotor.class, "brDrive");
         this.flDrive = hwdMap.get(DcMotor.class, "flDrive");
-        this.frDrive = hwdMap.get(DcMotor.class, "frDrive");
+        //this.frDrive = hwdMap.get(DcMotor.class, "frDrive");
         this.leftHook = hwdMap.get(Servo.class, "leftHook");
+        this.intake = hwdMap.get(DcMotor.class, "intake");
 
 //        this.blDrive.setDirection(motF);
 //        this.brDrive.setDirection(motR);
@@ -42,7 +44,7 @@ public class FFRobot {
         this.blDrive.setDirection(motF); //as declared before motF is forward motR is reverse
         this.brDrive.setDirection(motR);
         this.flDrive.setDirection(motF);
-        this.frDrive.setDirection(motR);
+        //this.frDrive.setDirection(motR);
         this.leftHook.setDirection(serR);
     }
     public void leftPow(double pow){
@@ -51,12 +53,13 @@ public class FFRobot {
     }
     public void rightPow(double pow){
         this.flDrive.setPower(pow);
-        this.frDrive.setPower(pow);
+        //this.frDrive.setPower(pow);
     }
     public void drive(double lPow, double rPow){
         this.leftPow(lPow);
         this.rightPow(rPow);
     }
+
     public void drive(double bothPow){ //override of drive(double, double)
         this.drive(bothPow,bothPow);
     }
@@ -65,7 +68,7 @@ public class FFRobot {
         blDrive.setPower(-pow);
         flDrive.setPower(pow);
         brDrive.setPower(pow);
-        frDrive.setPower(-pow);
+        //frDrive.setPower(-pow);
     }
 
     public void mechanumPov(Gamepad gp){
@@ -112,10 +115,11 @@ public class FFRobot {
 
         }
         foundHooks(gp);
-        this.flDrive.setPower(newflPower);
-        this.blDrive.setPower(newblPower);
-        this.frDrive.setPower(newfrPower);
-        this.brDrive.setPower(newbrPower);
+//        this.flDrive.setPower(newflPower);
+//        this.blDrive.setPower(newblPower);
+//        this.frDrive.setPower(newfrPower);
+//        this.brDrive.setPower(newbrPower);
+        this.intake.setPower(gp.left_stick_y);
 
 
 //        this.brDrive.setPower(frontLeftPower);
@@ -133,9 +137,9 @@ public class FFRobot {
     public double getBackRightPower(){
         return brDrive.getPower();
     }
-    public double getFrontRightPower(){
-        return frDrive.getPower();
-    }
+    //public double getFrontRightPower(){
+        //return frDrive.getPower();
+    //}
     public void brake(){
         this.drive(0.0);
     }
