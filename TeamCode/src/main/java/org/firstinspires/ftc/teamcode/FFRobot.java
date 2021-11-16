@@ -15,8 +15,9 @@ public class FFRobot {
     private DcMotor flDrive = null;
     private DcMotor frDrive = null;
     private DcMotor intake = null;
-    private Servo leftHook = null; //Tesrng btiyuc
-    //COmments
+    private DcMotor linearSlide = null;//Tesrng btiyuc
+    private DcMotor carousel = null;
+    //COmment
 
     private DcMotor[] motors; //array of motors
 
@@ -33,8 +34,9 @@ public class FFRobot {
         this.brDrive = hwdMap.get(DcMotor.class, "brDrive");
         this.flDrive = hwdMap.get(DcMotor.class, "flDrive");
         this.frDrive = hwdMap.get(DcMotor.class, "frDrive");
-        this.leftHook = hwdMap.get(Servo.class, "leftHook");
         this.intake = hwdMap.get(DcMotor.class, "intake");
+        this.linearSlide = hwdMap.get(DcMotor.class, "linearSlide");
+        this.carousel = hwdMap.get(DcMotor.class, "carousel");
 
 //        this.blDrive.setDirection(motF);
 //        this.brDrive.setDirection(motR);
@@ -45,7 +47,7 @@ public class FFRobot {
         this.brDrive.setDirection(motR);
         this.flDrive.setDirection(motF);
         this.frDrive.setDirection(motR);
-        this.leftHook.setDirection(serR);
+        this.intake.setDirection(motR);
     }
     public void leftPow(double pow){
         this.blDrive.setPower(pow);
@@ -114,12 +116,14 @@ public class FFRobot {
              */
 
         }
-        foundHooks(gp);
+        intake(gp);
+        linearPower(gp);
+        carouselPower(gp);
 //        this.flDrive.setPower(newflPower);
 //        this.blDrive.setPower(newblPower);
 //        this.frDrive.setPower(newfrPower);
 //        this.brDrive.setPower(newbrPower);
-        this.intake.setPower(gp.left_stick_y);
+        //this.intake.setPower(gp.left_stick_y);
 
 
 //        this.brDrive.setPower(frontLeftPower);
@@ -144,28 +148,20 @@ public class FFRobot {
         this.drive(0.0);
     }
 
-    public void hookDown()
-    {
-        leftHook.setPosition(0.4);
-        //.position = 0.72
-    }
 
-    public void hookUp()
-    {
-        leftHook.setPosition(0.01);
-       // this.rightHook?.position = 0.21
-    }
-
-    public void foundHooks(Gamepad gp) {
-        if (gp.right_bumper) { //hook down
-            hookDown(); //0.4
-        } else { //default position
-            hookUp(); //0.01
+    public void  intake(Gamepad gp){
+        if (gp.left_bumper){
+            intake.setPower(1);
         }
+        else
+            intake.setPower(0);
 
     }
-    public double getServo(){
-        return leftHook.getPosition();
+    public void linearPower(Gamepad gp){
+        linearSlide.setPower(gp.left_trigger);
+    }
+    public void carouselPower(Gamepad gp){
+            carousel.setPower(gp.right_trigger);
     }
 
 

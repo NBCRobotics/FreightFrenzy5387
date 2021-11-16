@@ -28,8 +28,11 @@ public class FFTeleOp extends OpMode {
                 "\nBack Right: " + robot.getBackRightPower());
         telemetry.addData("Game Pad: ", gamepad1.left_stick_y + " " +gamepad1.left_stick_x+ " "
                 +gamepad1.right_stick_x+ " " +gamepad1.right_stick_y);
+        telemetry.addData("Left Trigger: ", gamepad1.left_trigger);
 
-        telemetry.addData("Intake: ", gamepad1.left_stick_y);
+        telemetry.addData("Intake: ", gamepad1.left_bumper);
+        telemetry.addData("Carousel: ", gamepad1.right_trigger);
+        telemetry.addData("Linear Slide: ", gamepad1.left_trigger);
         //above labels all motors, servos, etc.
         telemetry.update();
     }
