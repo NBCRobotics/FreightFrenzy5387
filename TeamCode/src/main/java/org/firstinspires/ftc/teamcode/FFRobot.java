@@ -104,6 +104,15 @@ public class FFRobot {
 
 
 
+            /*nor = Math.max(Math.abs(frontLeftPower), Math.abs(backLeftPower),
+                             Math.abs(frontRightPower), Math.abs(backRightPower),
+                             nor); can we use this instead for lines 96-98
+                             if any one motor has their magnitude of power go over 1,
+                             the normal drive power will be set to the greatest power
+                             of the 4 motors, or nor if nor is greater(in this version of the code nor
+                             will never be greater)
+             */
+
         }
         foundHooks(gp);
 //        this.flDrive.setPower(newflPower);
@@ -133,11 +142,6 @@ public class FFRobot {
     //}
     public void brake(){
         this.drive(0.0);
-    }
-
-    public void setIntake(double pow)
-    {
-        this.intake.setPower(pow);
     }
 
     public void hookDown()
