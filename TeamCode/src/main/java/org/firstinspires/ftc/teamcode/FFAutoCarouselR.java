@@ -7,11 +7,13 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 
+//Made by Andrew Hu 11.15
 
 @TeleOp(name="FFAutoCarouselA", group="LinearOpMode")
 //@Disabled
+
 //RED
-public class FFAutoCarouselA extends LinearOpMode {
+public class FFAutoCarouselR extends LinearOpMode {
     FFRobot robot = new FFRobot();
     // Declare OpMode members.
     private ElapsedTime runtime = new ElapsedTime();
@@ -32,14 +34,15 @@ public class FFAutoCarouselA extends LinearOpMode {
         while (opModeIsActive()) {
 
             robot.drive(0.5);
-            robot.sleep(100);
+            //robot.sleep(100);
             robot.brake();
             robot.strafe(-0.5); //left
-            robot.sleep(2000);
+            //robot.sleep(2000);
             robot.brake();
             robot.CarouselSpin(0.5);
-            robot.sleep();
+            //robot.sleep(1000);
             robot.stopCarouselSpin();
+
 
 
 
