@@ -15,8 +15,11 @@ public class FFRobot {
     private DcMotor flDrive = null;
     private DcMotor frDrive = null;
     private DcMotor intake = null;
+
     private DcMotor linearSlide = null;//Tesrng btiyuc
     private DcMotor carousel = null;
+
+    private int zero = 0;
     //COmment
 
     private DcMotor[] motors; //array of motors
@@ -28,7 +31,6 @@ public class FFRobot {
 
 
     public void init(HardwareMap hwdMap){
-        //this.motors = new DcMotor[] {blDrive,brDrive,flDrive,frDrive};
 
         this.blDrive = hwdMap.get(DcMotor.class, "blDrive");
         this.brDrive = hwdMap.get(DcMotor.class, "brDrive");
@@ -38,10 +40,6 @@ public class FFRobot {
         this.linearSlide = hwdMap.get(DcMotor.class, "linearSlide");
         this.carousel = hwdMap.get(DcMotor.class, "carousel");
 
-//        this.blDrive.setDirection(motF);
-//        this.brDrive.setDirection(motR);
-//        this.flDrive.setDirection(motF);
-//        this.frDrive.setDirection(motR);
 
         this.blDrive.setDirection(motF); //as declared before motF is forward motR is reverse
         this.brDrive.setDirection(motR);
@@ -66,14 +64,14 @@ public class FFRobot {
         this.drive(bothPow,bothPow);
     }
 
-    public void strafe(double pow){
+    public void strafe(double pow){ //Pos = Right , Neg = Left
         blDrive.setPower(-pow);
         flDrive.setPower(pow);
         brDrive.setPower(pow);
         frDrive.setPower(-pow);
     }
 
-    public void mechanumPov(Gamepad gp){
+    public void mechanumPov(Gamepad gp, Gamepad gp2){
         double drive = (double) (gp.left_stick_y);
         double turn = (double) ((gp.left_stick_x) * -1);
         double strafe = (double) ((gp.right_stick_x) * -1);
@@ -116,9 +114,9 @@ public class FFRobot {
              */
 
         }
-        intake(gp);
-        linearPower(gp);
-        carouselPower(gp);
+        intake(gp2);
+        linearPower(gp2);
+        carouselPower(gp2);
 //        this.flDrive.setPower(newflPower);
 //        this.blDrive.setPower(newblPower);
 //        this.frDrive.setPower(newfrPower);
@@ -144,12 +142,25 @@ public class FFRobot {
     public double getFrontRightPower(){
         return frDrive.getPower();
     }
+
+
+
+    public double getIntakePower(){return intake.getPower();}
+    public double getLinearPower(){return linearSlide.getPower();}
+    public double getCarouselPower(){return carousel.getPower();}
+
+    public void setCarouselPower(double pow){
+        carousel.setPower(pow);
+    }
+
+
+
     public void brake(){
         this.drive(0.0);
     }
 
-
-    public void  intake(Gamepad gp){
+    //GamePad 2 Methods
+    public void intake(Gamepad gp){
         if (gp.left_bumper){
             intake.setPower(1);
         }
@@ -158,10 +169,17 @@ public class FFRobot {
 
     }
     public void linearPower(Gamepad gp){
-        linearSlide.setPower(gp.left_trigger);
+        linearSlide.setPower(gp.left_stick_y); //Left Stick has values from -1 - 1
+                                                //DcMotor power is -1 - 1
     }
-    public void carouselPower(Gamepad gp){
+    public void carouselPower(Gamepad gp){ //Blue - Right Trigger || Red - Left Trigger
+        if(gp.right_trigger > 0)
             carousel.setPower(gp.right_trigger);
+        else if(gp.left_trigger > 0){
+            carousel.setPower(-(gp.left_trigger));
+        }
+        else
+            carousel.setPower(zero);
     }
 
 
