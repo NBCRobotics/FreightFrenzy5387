@@ -18,6 +18,7 @@ public class FFRobot {
 
     private DcMotor linearSlide = null;//Tesrng btiyuc
     private DcMotor carousel = null;
+    private Servo basket = null;
 
     private int zero = 0;
     //COmment
@@ -39,6 +40,7 @@ public class FFRobot {
         this.intake = hwdMap.get(DcMotor.class, "intake");
         this.linearSlide = hwdMap.get(DcMotor.class, "linearSlide");
         this.carousel = hwdMap.get(DcMotor.class, "carousel");
+        this.basket = hwdMap.get(Servo.class, "basket");
 
 
         this.blDrive.setDirection(motF); //as declared before motF is forward motR is reverse
@@ -104,19 +106,13 @@ public class FFRobot {
 
 
 
-            /*nor = Math.max(Math.abs(frontLeftPower), Math.abs(backLeftPower),
-                             Math.abs(frontRightPower), Math.abs(backRightPower),
-                             nor); can we use this instead for lines 96-98
-                             if any one motor has their magnitude of power go over 1,
-                             the normal drive power will be set to the greatest power
-                             of the 4 motors, or nor if nor is greater(in this version of the code nor
-                             will never be greater)
-             */
+
 
         }
         intake(gp2);
         linearPower(gp2);
         carouselPower(gp2);
+        setBasket(gp2);
 //        this.flDrive.setPower(newflPower);
 //        this.blDrive.setPower(newblPower);
 //        this.frDrive.setPower(newfrPower);
@@ -153,6 +149,23 @@ public class FFRobot {
         carousel.setPower(pow);
     }
 
+    public void setLinearPower(double pow)
+    {
+        linearSlide.setPower(pow);
+    }
+
+    public void setBasketAngle(double angle){
+        basket.setPosition(angle);
+    }
+
+    public void turnIntake(double pow){
+        intake.setPower(pow);
+    }
+
+    public void turnIntake(){
+        this.turnIntake(1);
+    }
+
 
 
     public void brake(){
@@ -169,7 +182,8 @@ public class FFRobot {
 
     }
     public void linearPower(Gamepad gp){
-        linearSlide.setPower(gp.left_stick_y); //Left Stick has values from -1 - 1
+        double pow = (-(gp.left_stick_y))/3.0; //(*-1 bc up is down rn)
+        linearSlide.setPower(pow); //Left Stick has values from -1 - 1
                                                 //DcMotor power is -1 - 1
     }
     public void carouselPower(Gamepad gp){ //Blue - Right Trigger || Red - Left Trigger
@@ -180,6 +194,22 @@ public class FFRobot {
         }
         else
             carousel.setPower(zero);
+    }
+
+    public void setBasket(Gamepad gp){
+        double pos = 0.0;
+        while (Math.abs(gp.left_stick_x) > 0)
+        {
+            if (gp.left_stick_x > 0){
+                pos += 0.1;
+
+            } else if (gp.left_stick_y > 0){
+                pos -= 0.1;
+            }
+            basket.setPosition(pos);
+        }
+
+
     }
 
 
