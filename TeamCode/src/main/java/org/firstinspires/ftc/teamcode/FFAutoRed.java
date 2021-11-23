@@ -17,6 +17,11 @@ public class FFAutoRed extends LinearOpMode {
     // Declare OpMode members.
     private ElapsedTime runtime = new ElapsedTime();
 
+    final int MAXSLIDEHEIGHT = robot.getMax();
+    final int MINSLIDEHEIGHT = robot.getMin();
+
+
+
 
     @Override
     public void runOpMode() {
@@ -52,49 +57,47 @@ public class FFAutoRed extends LinearOpMode {
             robot.drive(0.5);
             doFor(750);
             sleep(400);
-            /*
 
-            if(duckPos == left) {
-               robot.setLinearPower(0.1); //this changes. lol.
-            doFor(300);
-            }
+            raiseAndDrop(determineLevel());
 
-            if(duckPos == middle) {
-               robot.setLinearPower(0.2); //this changes. lol.
-            doFor(300);
-            }
-
-            if(duckPos == right) {
-               robot.setLinearPower(0.3); //this changes. lol.
-            doFor(300);
-            just use a switch function rithvik lol
-            }
-
-             */
-            robot.setLinearPower(0.3); //this changes. lol.
-            doFor(300);
-
-            sleep(200);
-            robot.setBasketAngle(0.2);
-
-
-            robot.setLinearPower(-0.3);
-            doFor(300);
             robot.setBasketAngle(0.25);
             robot.drive(-0.5,-1);
             doFor(1000);
 
 
 
-            do {
+            /*do {
                 robot.drive(1);
                 doFor(1000);
                 robot.turnIntake();
+                robot.drive(-1);
+                doFor(1000);
+                robot.strafe(-.5);
+                doFor(300);
+                robot.drive(0.5,-0.5);
+                doFor(500);
+                robot.setLinearPower(0.3); //this changes. lol.
+                sleep(300);
+                robot.setLinearPower(0);
+
+                sleep(200);
+                robot.setBasketAngle(0.2);
+
+
+                robot.setLinearPower(-0.3);
+                sleep(300);
+                robot.setLinearPower(0);
+                robot.setBasketAngle(0.25);
+                robot.drive(-0.5,-1);
+                doFor(500);
+
             } while(runtime.time()<=25000);
+            */
+            //return to storage unit
 
-            //return to station
-
-
+            robot.drive(-0.6);
+            robot.strafe(-0.4);
+            doFor(1000);
 
 
 
@@ -116,5 +119,75 @@ public class FFAutoRed extends LinearOpMode {
     public void doFor()
     {
         this.doFor(1000);
+    }
+
+    public int determineLevel()
+    {
+        int level = 0;
+        return level;
+    }
+
+    public void raiseAndDrop(int level)
+    {
+        double currentHeight = robot.getSlideEncoder(); //assuming it starts at ground level
+        double targetHeight = 0; //where the linear slide wants to go
+        switch(level) {
+            case 1:
+                targetHeight = MAXSLIDEHEIGHT / 5.0;
+                while (currentHeight < targetHeight) {
+                    robot.setLinearPower(-0.5);
+                    currentHeight = robot.getSlideEncoder();
+                }
+                robot.setLinearPower(0);
+                sleep(500);
+                robot.turnIntake(-1);
+                sleep(500);
+                robot.turnIntake(0);
+                while (currentHeight > MINSLIDEHEIGHT)
+                {
+                    robot.setLinearPower(0.5);
+                    currentHeight = robot.getSlideEncoder();
+                }
+                robot.setLinearPower(0);
+                break;
+            case 2:
+                targetHeight = MAXSLIDEHEIGHT / 2.0;
+                while (currentHeight < targetHeight) {
+                    robot.setLinearPower(0.5);
+                    currentHeight = robot.getSlideEncoder();
+                }
+                robot.setLinearPower(0);
+                sleep(500);
+                robot.turnIntake(-1);
+                sleep(500);
+                robot.turnIntake(0);
+                while (currentHeight > MINSLIDEHEIGHT)
+                {
+                    robot.setLinearPower(0.5);
+                    currentHeight = robot.getSlideEncoder();
+                }
+                robot.setLinearPower(0);
+                break;
+            case 3:
+                targetHeight = MAXSLIDEHEIGHT;
+                while (currentHeight < targetHeight) {
+                    robot.setLinearPower(0.5);
+                    currentHeight = robot.getSlideEncoder();
+                }
+                robot.setLinearPower(0);
+                sleep(500);
+                robot.turnIntake(-1);
+                sleep(500);
+                robot.turnIntake(0);
+                while (currentHeight > MINSLIDEHEIGHT)
+                {
+                    robot.setLinearPower(0.5);
+                    currentHeight = robot.getSlideEncoder();
+                }
+                robot.setLinearPower(0);
+                break;
+        }
+
+
     }
 }

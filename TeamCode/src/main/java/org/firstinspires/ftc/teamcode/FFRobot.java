@@ -22,7 +22,7 @@ public class FFRobot {
 
 
     private int zero = 0;
-    private int max = 1200;
+    private int max = -3000;
     private int min = 0;
     //COmment
 
@@ -54,6 +54,7 @@ public class FFRobot {
         this.linearSlide.setDirection(motR);
 
         this.linearSlide.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
     }
     public void leftPow(double pow){
         this.blDrive.setPower(pow);
@@ -190,41 +191,56 @@ public class FFRobot {
     public void linearPower(Gamepad gp){
          //(*-1 bc up is down rn)
         double pow = 0;
-        if(linearSlide.getCurrentPosition() <= min){ //If the current position is all the way down
-            if(gp.left_stick_y < 0){ // If I make the joystick point down
-                pow = 0;
-                linearSlide.setPower(pow); //Just set it to 0 beacuse I dont want to go more down
-            }
-        }
-        else if(linearSlide.getCurrentPosition() >= max){ //If current pos is at the max
-            if(gp.left_stick_y > 0){ //And I move joystick up more
-                pow = 0;
-                linearSlide.setPower(pow); //Set pow to 0 because I dont want to go to max
-            }
-        }
-        else{
+//        if(linearSlide.getCurrentPosition() <= min && gp.left_stick_y < 0){ //If the current position is all the way down
+//            pow = 0;
+////                linearSlide.setPower(pow); //Just set it to 0 beacuse I dont want to go more down
+//        }
+//        else if(Math.abs(linearSlide.getCurrentPosition()) >= Math.abs(max) && gp.left_stick_y > 0){ //If current pos is at the max
+////            if(gp.left_stick_y > 0){ //And I move joystick up more
+//                pow = 0;
+////                linearSlide.setPower(pow); //Set pow to 0 because I dont want to go to max
+//        }
+//        else{
+//            pow = (gp.left_stick_y)/3.0;
+//
+//        }
+
+        //Up - Power negative Encoder is negative
+        if(linearSlide.getCurrentPosition() <= max && gp.left_stick_y < 0)//NEGATIVE IS UP
+            pow = 0;
+        else if(linearSlide.getCurrentPosition() >= min && gp.left_stick_y > 0)//POS IS DOWN
+            pow = 0;
+        else
             pow = (gp.left_stick_y)/3.0;
-            linearSlide.setPower(pow);
-        }
+        linearSlide.setPower(pow);
          //Left Stick has values from -1 - 1
                                                 //DcMotor power is -1 - 1
     }
+
     public boolean isMax(){
-        if(linearSlide.getCurrentPosition() >= max){
+        if(linearSlide.getCurrentPosition() <= max){
             return true;
         }
         else{
             return false;
         }
     }
+    public int getMax(){
+        return max;
+    }
+
     public boolean isMin(){
-        if(linearSlide.getCurrentPosition() <= min){
+        if(linearSlide.getCurrentPosition() >= min){
             return true;
         }
         else{
             return false;
         }
     }
+    public int getMin(){
+        return min;
+    }
+
 
     public double getSlideEncoder(){
         return linearSlide.getCurrentPosition();
