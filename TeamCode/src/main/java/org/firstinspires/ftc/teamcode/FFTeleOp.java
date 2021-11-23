@@ -31,6 +31,9 @@ public class FFTeleOp extends OpMode {
 
         telemetry.addData("Intake: ", robot.getIntakePower() + "\n");
         telemetry.addData("LinearSlide: ", +robot.getLinearPower() + "\n");
+        telemetry.addData("LinearSlide Encoder: ", +robot.getSlideEncoder() + "\n");
+        if (robot.isMax()) telemetry.addData("LINEAR SLIDE ERROR", "MAX REACHED");
+        if (robot.isMin()) telemetry.addData("LINEAR SLIDE ERROR", "MIN REACHED");
         telemetry.addData("Carousel: ", robot.getCarouselPower() + "\n");
         //above labels all motors, servos, etc.
         telemetry.update();
