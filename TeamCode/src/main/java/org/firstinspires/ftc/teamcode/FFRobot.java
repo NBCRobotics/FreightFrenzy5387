@@ -24,7 +24,7 @@ public class FFRobot {
 
 
     private int zero = 0;
-    private int max = -3600;
+    private int max = -2500;
     private int min = 0;
     //COmment
 
