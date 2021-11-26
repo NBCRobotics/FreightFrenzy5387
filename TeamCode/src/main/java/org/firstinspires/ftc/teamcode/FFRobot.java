@@ -24,7 +24,7 @@ public class FFRobot {
 
 
     private int zero = 0;
-    private int max = -2500;
+    private int max = -2400;
     private int min = 0;
     //COmment
 
@@ -134,10 +134,10 @@ public class FFRobot {
         //this.intake.setPower(gp.left_stick_y);
 
 
-//        this.brDrive.setPower(frontLeftPower);
-//        this.brDrive.setPower(backLeftPower);
-//        this.brDrive.setPower(frontRightPower);
-//        this.brDrive.setPower(backRightPower);
+        this.flDrive.setPower(frontLeftPower/1.5);
+        this.blDrive.setPower(backLeftPower/1.5);
+        this.frDrive.setPower(frontRightPower/1.5);
+        this.brDrive.setPower(backRightPower/1.5);
 
     }
     public double getFrontLeftPower(){
@@ -202,7 +202,13 @@ public class FFRobot {
 //            intake.setPower(0.95);
 //        if (gp.b)
 //            intake.setPower(0);
-        intake.setPower(gp.right_stick_y);
+        if (gp.right_stick_y > 0)
+            intake.setPower(gp.right_stick_y);
+        else if (gp.right_stick_y < 0)
+            intake.setPower(gp.right_stick_y);
+        else
+            intake.setPower(zero);
+      //  intake.setPower(gp.right_stick_y);
     }
     public void linearPower(Gamepad gp){
          //(*-1 bc up is down rn)
