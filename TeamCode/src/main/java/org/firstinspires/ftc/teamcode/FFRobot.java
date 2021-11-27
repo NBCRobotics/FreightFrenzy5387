@@ -24,8 +24,8 @@ public class FFRobot {
 
 
     private int zero = 0;
-    private int max = -2400;
-    private int min = 0;
+    private int max = -3000;
+    private int min = 250;
     //COmment
 
     private DcMotor[] motors; //array of motors
@@ -134,10 +134,10 @@ public class FFRobot {
         //this.intake.setPower(gp.left_stick_y);
 
 
-        this.flDrive.setPower(frontLeftPower/1.5);
-        this.blDrive.setPower(backLeftPower/1.5);
-        this.frDrive.setPower(frontRightPower/1.5);
-        this.brDrive.setPower(backRightPower/1.5);
+        this.flDrive.setPower(frontLeftPower/1.25);
+        this.blDrive.setPower(backLeftPower/1.25);
+        this.frDrive.setPower(frontRightPower/1.25);
+        this.brDrive.setPower(backRightPower/1.25);
 
     }
     public double getFrontLeftPower(){
@@ -233,7 +233,7 @@ public class FFRobot {
         else if(linearSlide.getCurrentPosition() >= min && gp.left_stick_y > 0)//POS IS DOWN
             pow = 0;
         else
-            pow = (gp.left_stick_y)/3.0;
+            pow = (gp.left_stick_y)/2.5;
         linearSlide.setPower(pow);
          //Left Stick has values from -1 - 1
                                                 //DcMotor power is -1 - 1

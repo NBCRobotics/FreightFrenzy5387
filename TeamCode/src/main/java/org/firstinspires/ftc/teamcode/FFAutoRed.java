@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode;
 
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
@@ -9,7 +10,7 @@ import com.qualcomm.robotcore.util.Range;
 
 //Made by Andrew Hu
 
-@TeleOp(name="FFAutoRed", group="LinearOpMode")
+@Autonomous(name="FFAutoRed", group="LinearOpMode")
 //@Disabled
 //RED
 public class FFAutoRed extends LinearOpMode {
