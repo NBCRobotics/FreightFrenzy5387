@@ -82,10 +82,10 @@ public class FFRobot {
     }
 
     public void strafe(double pow){ //Pos = Right , Neg = Left
-        blDrive.setPower(-pow);
-        flDrive.setPower(pow);
-        brDrive.setPower(pow);
-        frDrive.setPower(-pow);
+        blDrive.setPower(pow); //MOTF
+        flDrive.setPower(pow); //MOTF
+        brDrive.setPower(pow); //MOTR
+        frDrive.setPower(pow); //MOTR
     }
 
     public DcMotor getBlDrive(){
@@ -206,7 +206,8 @@ public class FFRobot {
         else if (gp.right_stick_y < 0)
             intake.setPower(gp.right_stick_y);
         else
-            intake.setPower(zero);
+            intake.setPower(0);
+
     }
     public void linearPower(Gamepad gp){
          //(*-1 bc up is down rn)
@@ -254,9 +255,9 @@ public class FFRobot {
 
     public void carouselPower(Gamepad gp){ //Blue - Right Trigger || Red - Left Trigger
         if(gp.right_trigger > 0)
-            carousel.setPower(gp.right_trigger);
+            carousel.setPower(-(gp.right_trigger));
         else if(gp.left_trigger > 0){
-            carousel.setPower(-(gp.left_trigger));
+            carousel.setPower((gp.left_trigger));
         }
         else
             carousel.setPower(zero);

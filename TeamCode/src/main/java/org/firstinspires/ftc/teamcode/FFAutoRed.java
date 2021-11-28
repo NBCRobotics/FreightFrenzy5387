@@ -36,6 +36,7 @@ import com.qualcomm.robotcore.util.Range;
     public void runOpMode() {
         telemetry.addData("Status", "Initialized");
         telemetry.update();
+        robot.init(hardwareMap);
 
 
 
@@ -103,6 +104,7 @@ import com.qualcomm.robotcore.util.Range;
             robot.strafe(-0.4);
             doFor(1000);
 
+
             //With encoders
 
 //            driveDistance(0.5, 300);
@@ -119,8 +121,8 @@ import com.qualcomm.robotcore.util.Range;
 
             //idk if we will use time but yea here
             telemetry.addData("Status: ", "Autonomous Terminalized");
-            telemetry.addData("Motors", "left (%.2f), right (%.2f)", robot.getBackLeftPower(), robot.getBackRightPower());
             telemetry.update();
+            break;
         }
     }
 

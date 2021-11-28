@@ -8,8 +8,8 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 
-@Autonomous(name="FFAutoParkRed", group="LinearOpMode")
-public class FFAutoParkRed extends LinearOpMode {
+@Autonomous(name="FFAutoForwardLeft", group="LinearOpMode")
+public class FFAutoForwardLeft extends LinearOpMode {
     FFRobot robot = new FFRobot();
 
     private ElapsedTime runtime = new ElapsedTime();
@@ -24,28 +24,19 @@ public class FFAutoParkRed extends LinearOpMode {
         waitForStart();
         runtime.reset();
 
-        while (opModeIsActive()) {
 
-//            robot.drive(0.5);
-//            doFor(500);
-//            robot.strafe(0.5);
-//            doFor(1900);
-//            robot.setCarouselPower(1);
-//            doFor(2000);
-//            robot.drive(0.5);
-//            doFor(1500);
-//            robot.strafe(0.5);
-//            robot.drive(-0.50);
-//            doFor(500);
-            robot.drive(-0.5);
-            doFor(3000);
-            telemetry.addData("Status: ", "Autonomous Terminalized");
-            telemetry.update();
-            sleep(27000);
+        robot.setLinearPower(-0.1);
+        sleep(500);
+        robot.setLinearPower(0);
+
+            robot.drive(-0.5);//f
+            doFor(1250);
+            robot.strafe(-0.5);
+            doFor(2000);
 
 
-        }
-        robot.brake();
+
+
     }
 
     public void doFor(long ms) {

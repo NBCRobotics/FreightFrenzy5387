@@ -36,6 +36,7 @@ public class FFAutoBlue extends LinearOpMode {
     public void runOpMode() {
         telemetry.addData("Status", "Initialized");
         telemetry.update();
+        robot.init(hardwareMap);
 
         waitForStart();
         runtime.reset();
@@ -87,8 +88,8 @@ public class FFAutoBlue extends LinearOpMode {
 
             // Show the elapsed game time and wheel power.
             telemetry.addData("Status", "Run Time: " + runtime.toString());
-            telemetry.addData("Motors", "left (%.2f), right (%.2f)", robot.getBackLeftPower(), robot.getBackRightPower());
             telemetry.update();
+            break;
         }
     }
 
