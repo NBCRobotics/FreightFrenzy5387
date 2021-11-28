@@ -13,7 +13,7 @@ import com.qualcomm.robotcore.util.Range;
 @Autonomous(name="FFAutoRed", group="LinearOpMode")
 //@Disabled
 //RED
-public class FFAutoRed extends LinearOpMode {
+    public class FFAutoRed extends LinearOpMode {
     FFRobot robot = new FFRobot();
     // Declare OpMode members.
     private ElapsedTime runtime = new ElapsedTime();
@@ -49,8 +49,8 @@ public class FFAutoRed extends LinearOpMode {
         while (opModeIsActive()) {
             //Without encoders
             //delivering the duck
-//            robot.drive(0.5);
-//            doFor(1000);
+            robot.drive(0.5);
+            doFor(1000);
 //
 //
 //            sleep(400);
@@ -110,16 +110,16 @@ public class FFAutoRed extends LinearOpMode {
 
             //With encoders
 
-            driveDistance(0.5, 300);
-            strafeDistance(0.5, 3728);
-            robot.setCarouselPower(0.9);
-            sleep(2000);
-            robot.setCarouselPower(0);
-
-            strafeDistance(0.5, 7457);
-            driveDistance(0.5, 5592);
-
-            raiseAndDrop(2, 0.5);
+//            driveDistance(0.5, 300);
+//            strafeDistance(0.5, 3728);
+//            robot.setCarouselPower(0.9);
+//            sleep(2000);
+//            robot.setCarouselPower(0);
+//
+//            strafeDistance(0.5, 7457);
+//            driveDistance(0.5, 5592);
+//
+//            raiseAndDrop(2, 0.5);
 
 
             //idk if we will use time but yea here

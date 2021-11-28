@@ -26,6 +26,8 @@ public class FFRobot {
     private int zero = 0;
     private int max = -3000;
     private int min = 250;
+
+    private int stageTwo = -1500;
     //COmment
 
     private DcMotor[] motors; //array of motors
@@ -126,18 +128,13 @@ public class FFRobot {
         intake(gp2);
         linearPower(gp2);
         carouselPower(gp2);
-        setBasket(gp2);
-//        this.flDrive.setPower(newflPower);
-//        this.blDrive.setPower(newblPower);
-//        this.frDrive.setPower(newfrPower);
-//        this.brDrive.setPower(newbrPower);
-        //this.intake.setPower(gp.left_stick_y);
+        linearUpStageTwo(stageTwo, gp2);
 
 
-        this.flDrive.setPower(frontLeftPower/1.25);
-        this.blDrive.setPower(backLeftPower/1.25);
-        this.frDrive.setPower(frontRightPower/1.25);
-        this.brDrive.setPower(backRightPower/1.25);
+        this.flDrive.setPower(frontLeftPower/(gp.left_trigger+1));
+        this.blDrive.setPower(backLeftPower/(gp.left_trigger+1));
+        this.frDrive.setPower(frontRightPower/(gp.left_trigger+1));
+        this.brDrive.setPower(backRightPower/(gp.left_trigger+1));
 
     }
     public double getFrontLeftPower(){
@@ -196,36 +193,16 @@ public class FFRobot {
 
     //GamePad 2 Methods
     public void intake(Gamepad gp){
-//        if (gp.left_bumper)
-//            intake.setPower(-0.95);
-//        if (gp.right_bumper)
-//            intake.setPower(0.95);
-//        if (gp.b)
-//            intake.setPower(0);
         if (gp.right_stick_y > 0)
             intake.setPower(gp.right_stick_y);
         else if (gp.right_stick_y < 0)
             intake.setPower(gp.right_stick_y);
         else
             intake.setPower(zero);
-      //  intake.setPower(gp.right_stick_y);
     }
     public void linearPower(Gamepad gp){
          //(*-1 bc up is down rn)
         double pow = 0;
-//        if(linearSlide.getCurrentPosition() <= min && gp.left_stick_y < 0){ //If the current position is all the way down
-//            pow = 0;
-////                linearSlide.setPower(pow); //Just set it to 0 beacuse I dont want to go more down
-//        }
-//        else if(Math.abs(linearSlide.getCurrentPosition()) >= Math.abs(max) && gp.left_stick_y > 0){ //If current pos is at the max
-////            if(gp.left_stick_y > 0){ //And I move joystick up more
-//                pow = 0;
-////                linearSlide.setPower(pow); //Set pow to 0 because I dont want to go to max
-//        }
-//        else{
-//            pow = (gp.left_stick_y)/3.0;
-//
-//        }
 
         //Up - Power negative Encoder is negative
         if(linearSlide.getCurrentPosition() <= max && gp.left_stick_y < 0)//NEGATIVE IS UP
@@ -263,11 +240,9 @@ public class FFRobot {
         return min;
     }
 
-
     public double getSlideEncoder(){
         return linearSlide.getCurrentPosition();
     }
-
 
     public void carouselPower(Gamepad gp){ //Blue - Right Trigger || Red - Left Trigger
         if(gp.right_trigger > 0)
@@ -279,22 +254,19 @@ public class FFRobot {
             carousel.setPower(zero);
     }
 
-    public void setBasket(Gamepad gp){
-        double pos = 0.0;
-        while (Math.abs(gp.left_stick_x) > 0)
-        {
-            if (gp.left_stick_x > 0){
-                pos += 0.1;
-
-            } else if (gp.left_stick_y > 0){
-                pos -= 0.1;
-            }
-            basket.setPosition(pos);
+    public void linearUpStageTwo(int dis, Gamepad gp){
+        if(gp.right_stick_button){
+            linearSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            linearSlide.setTargetPosition(dis);
+            if(getSlideEncoder() < dis)
+                setLinearPower(-0.2);
+            else
+                setLinearPower(0.2);
         }
-
-
+        if(getSlideEncoder() == dis){
+            setLinearPower(0.0);
+        }
+        linearSlide.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
     }
-
-
 
 }
