@@ -87,7 +87,7 @@ public class FFAutoBlue extends LinearOpMode {
 //            strafeDistance(0.5, 3728);
 
             // Show the elapsed game time and wheel power.
-            telemetry.addData("Status", "Run Time: " + runtime.toString());
+            telemetry.addData("Status", "Runn Time: " + runtime.toString());
             telemetry.update();
             break;
         }
