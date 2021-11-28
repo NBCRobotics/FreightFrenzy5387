@@ -54,7 +54,7 @@ public class FFAutoBlue extends LinearOpMode {
 
             //pre load box on specified level
             robot.strafe(-0.5);
-            doFor(1500);
+            doFor(1750);
             sleep(400);
             robot.drive(0.5);
             doFor(750);
