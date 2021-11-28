@@ -23,8 +23,6 @@ import com.qualcomm.robotcore.util.Range;
 
     DcMotor blDrive = null;
     DcMotor brDrive = null;
-    DcMotor flDrive = null;
-    DcMotor frDrive = null;
 
     final int ticksPerRev = 1440;
     //0.2103 mm per tick
@@ -41,7 +39,6 @@ import com.qualcomm.robotcore.util.Range;
 
 
 
-        // Wait for the game to start (driver presses PLAY)
         waitForStart();
         runtime.reset();
 
@@ -50,31 +47,29 @@ import com.qualcomm.robotcore.util.Range;
             //Without encoders
             //delivering the duck
             robot.drive(0.5);
+            doFor(400);
+            robot.strafe(-0.5);
+            doFor(2000);
+            robot.drive(0.5,-0.5);
             doFor(1000);
+            robot.setCarouselPower(0.7);
+            doFor(2000);
+            robot.setCarouselPower(0);
+
+            //preload box completely on randomized level
+            robot.strafe(-0.5);
+            doFor(1500);
+            sleep(400);
+            robot.drive(0.5);
+            doFor(750);
+            sleep(400);
 //
 //
-//            sleep(400);
-//            robot.strafe(0.5); //Right
-//            doFor(2000);
-//            sleep(400);
-//            robot.setCarouselPower(0.5);
-//            doFor(2000);
-//            robot.setCarouselPower(0);
-//
-//            //preload box completely on randomized level
-//            robot.strafe(-0.5);
-//            doFor(1500);
-//            sleep(400);
-//            robot.drive(0.5);
-//            doFor(750);
-//            sleep(400);
-//
-//
-//            raiseAndDrop(determineLevel(), 0.5);
+//            raiseAndDrop(2, 0.5);
 //
 //            robot.setBasketAngle(0.25);
-//            robot.drive(-0.5,-1);
-//            doFor(1000);
+            robot.drive(-0.5,-1);
+            doFor(1000);
 //            /*do {
 //                robot.drive(1);
 //                doFor(1000);
@@ -104,9 +99,9 @@ import com.qualcomm.robotcore.util.Range;
 //            */
 //            //return to storage unit
 //
-//            robot.drive(-0.6);
-//            robot.strafe(-0.4);
-//            doFor(1000);
+            robot.drive(-0.6);
+            robot.strafe(-0.4);
+            doFor(1000);
 
             //With encoders
 
@@ -123,7 +118,7 @@ import com.qualcomm.robotcore.util.Range;
 
 
             //idk if we will use time but yea here
-            telemetry.addData("Status", "Run Time: " + runtime.toString());
+            telemetry.addData("Status: ", "Autonomous Terminalized");
             telemetry.addData("Motors", "left (%.2f), right (%.2f)", robot.getBackLeftPower(), robot.getBackRightPower());
             telemetry.update();
         }

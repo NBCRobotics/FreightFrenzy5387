@@ -21,10 +21,8 @@ public class FFAutoBlue extends LinearOpMode {
     final int MAXSLIDEHEIGHT = robot.getMax();
     final int MINSLIDEHEIGHT = robot.getMin();
 
-    DcMotor blDrive = null;
-    DcMotor brDrive = null;
-    DcMotor flDrive = null;
-    DcMotor frDrive = null;
+    DcMotor blDrive = robot.getBlDrive();
+    DcMotor brDrive = robot.getBrDrive();
 
     final int ticksPerRev = 1440;
     //0.2103 mm per tick
@@ -47,7 +45,7 @@ public class FFAutoBlue extends LinearOpMode {
             robot.drive(0.5);
             doFor(500);
             sleep(400);
-            robot.strafe(-0.5); //left
+            robot.strafe(0.5); //right
             doFor(2000);
             sleep(400);
             robot.setCarouselPower(-0.5);
@@ -55,13 +53,12 @@ public class FFAutoBlue extends LinearOpMode {
             robot.setCarouselPower(0);
 
             //pre load box on specified level
-            robot.strafe(0.5);
+            robot.strafe(-0.5);
             doFor(1500);
             sleep(400);
             robot.drive(0.5);
             doFor(750);
 
-            raiseAndDrop(2, 0.5);
 
             robot.drive(-1,-0.5);   //ok this is kinda random rn
             doFor(1000);                   //doesn't guarantee that the robot will be fully in the parking spot
@@ -85,8 +82,8 @@ public class FFAutoBlue extends LinearOpMode {
 
             //with encoders
 
-            driveDistance(0.5, 300);
-            strafeDistance(0.5, 3728);
+//            driveDistance(0.5, 300);
+//            strafeDistance(0.5, 3728);
 
             // Show the elapsed game time and wheel power.
             telemetry.addData("Status", "Run Time: " + runtime.toString());
@@ -107,14 +104,14 @@ public class FFAutoBlue extends LinearOpMode {
 
     public void driveDistance(double pow, int dis)
     {
-        blDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        brDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        this.blDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        this.brDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         //after resetting, set runmode to to pos
-        blDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        brDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        this.blDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        this.brDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
-        blDrive.setTargetPosition(-dis);   //the strafe method sets the power of bl to negtative
-        brDrive.setTargetPosition(dis);
+        this.blDrive.setTargetPosition(-dis);   //the strafe method sets the power of bl to negtative
+        this.brDrive.setTargetPosition(dis);
 
 
         //two of the pos is needed for the others the motors will "travel" the same amount
@@ -125,22 +122,22 @@ public class FFAutoBlue extends LinearOpMode {
         {
 
         }
-        blDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        brDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        this.blDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        this.brDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         robot.brake();
     }
 
     public void strafeDistance(double pow, int dis)
     {
-        blDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        brDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        this.blDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        this.brDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         //after resetting, set runmode to to pos
-        blDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        brDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        this.blDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        this.brDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
 
-        blDrive.setTargetPosition(-dis);   //the strafe method sets the power of bl to negtative
-        brDrive.setTargetPosition(dis);
+        this.blDrive.setTargetPosition(-dis);   //the strafe method sets the power of bl to negtative
+        this.brDrive.setTargetPosition(dis);
         //two of the pos is needed of the motors is needed all of them will "travel" the same amount
         //then based on the time and power needed to travel to that position, set all other motors
 
@@ -151,6 +148,8 @@ public class FFAutoBlue extends LinearOpMode {
         }
 
         robot.brake();
+        this.blDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        this.brDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         //i totally did not copy and paste the driveDistance method
     }
 

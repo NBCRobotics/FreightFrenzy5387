@@ -59,9 +59,8 @@ public class FFRobot {
 
         this.linearSlide.setDirection(motR);
 
-
-
-
+        this.blDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        this.brDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         this.linearSlide.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
     }
@@ -88,6 +87,15 @@ public class FFRobot {
         brDrive.setPower(pow);
         frDrive.setPower(-pow);
     }
+
+    public DcMotor getBlDrive(){
+        return blDrive;
+    }
+
+    public DcMotor getBrDrive(){
+        return brDrive;
+    }
+
 
     public void mechanumPov(Gamepad gp, Gamepad gp2){
         double drive = (double) (gp.left_stick_y);
