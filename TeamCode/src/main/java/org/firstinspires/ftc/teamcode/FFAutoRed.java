@@ -105,19 +105,6 @@ import com.qualcomm.robotcore.util.Range;
             doFor(1000);
 
 
-            //With encoders
-
-//            driveDistance(0.5, 300);
-//            strafeDistance(0.5, 3728);
-//            robot.setCarouselPower(0.9);
-//            sleep(2000);
-//            robot.setCarouselPower(0);
-//
-//            strafeDistance(0.5, 7457);
-//            driveDistance(0.5, 5592);
-//
-//            raiseAndDrop(2, 0.5);
-
 
             //idk if we will use time but yea here
             telemetry.addData("Status: ", "Autonomous Terminalized");

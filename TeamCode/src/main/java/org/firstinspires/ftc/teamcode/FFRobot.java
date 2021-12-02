@@ -9,6 +9,9 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
+
+import java.lang.reflect.Field;
+
 //created by Sucheth Seethella
 public class FFRobot {
     //note that the motors are now all in a single row
@@ -24,10 +27,10 @@ public class FFRobot {
 
 
     private int zero = 0;
-    private int max = -3000;
-    private int min = 250;
+    private int max = -9885;
+    private int min = 0;
 
-    private int stageTwo = -1500;
+    private int stageTwo = FieldMeasurements.getStageTwoHeight();
     //COmment
 
     private DcMotor[] motors; //array of motors
@@ -219,7 +222,7 @@ public class FFRobot {
         else if(linearSlide.getCurrentPosition() >= min && gp.left_stick_y > 0)//POS IS DOWN
             pow = 0;
         else
-            pow = (gp.left_stick_y)/2.5;
+            pow = (gp.left_stick_y);
         linearSlide.setPower(pow);
          //Left Stick has values from -1 - 1
                                                 //DcMotor power is -1 - 1
