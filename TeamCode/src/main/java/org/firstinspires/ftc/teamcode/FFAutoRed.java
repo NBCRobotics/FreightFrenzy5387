@@ -8,6 +8,13 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 
+import org.openftc.easyopencv.OpenCvCamera;
+import org.openftc.easyopencv.OpenCvCameraFactory;
+import org.openftc.easyopencv.OpenCvCameraRotation;
+import org.openftc.easyopencv.OpenCvInternalCamera;
+import org.openftc.easyopencv.OpenCvPipeline;
+import org.openftc.easyopencv.OpenCvViewport;
+
 //Made by Andrew Hu
 
 @Autonomous(name="FFAutoRed", group="LinearOpMode")
@@ -29,8 +36,10 @@ import com.qualcomm.robotcore.util.Range;
     //if ticksPerRev = 1440, 0.1635 mm per tick
     //609.6 millimeters per square
     //3728.44037 ticks per square
-
     final int carouselPos = 0;
+    private int setStage = 0;
+
+    OpenCvCamera cam;
 
     @Override
     public void runOpMode() {
@@ -38,79 +47,41 @@ import com.qualcomm.robotcore.util.Range;
         telemetry.update();
         robot.init(hardwareMap);
 
+        int camID = hardwareMap.appContext.getResources()
+                .getIdentifier("camID", "id", hardwareMap.appContext.getPackageName());
+        cam = OpenCvCameraFactory.getInstance()
+                .createInternalCamera(OpenCvInternalCamera.CameraDirection.FRONT, camID);
 
+        BarcodeDetector detector = new BarcodeDetector(telemetry);
+        cam.setPipeline(detector);
+//        cam.openCameraDeviceAsync(
+//                () -> cam.startStreaming(480, 360, OpenCvCameraRotation.UPRIGHT)
+//        );
 
         waitForStart();
         runtime.reset();
 
-        // run until the end of the match (driver presses STOP)
-        while (opModeIsActive()) {
-            //Without encoders
-            //delivering the duck
-            robot.drive(0.5);
-            doFor(400);
-            robot.strafe(-0.5);
-            doFor(2000);
-            robot.drive(0.5,-0.5);
-            doFor(1000);
-            robot.setCarouselPower(0.7);
-            doFor(2000);
-            robot.setCarouselPower(0);
-
-            //preload box completely on randomized level
-            robot.strafe(-0.5);
-            doFor(1500);
-            sleep(400);
-            robot.drive(0.5);
-            doFor(750);
-            sleep(400);
-//
-//
-//            raiseAndDrop(2, 0.5);
-//
-//            robot.setBasketAngle(0.25);
-            robot.drive(-0.5,-1);
-            doFor(1000);
-//            /*do {
-//                robot.drive(1);
-//                doFor(1000);
-//                robot.turnIntake();
-//                robot.drive(-1);
-//                doFor(1000);
-//                robot.strafe(-.5);
-//                doFor(300);
-//                robot.drive(0.5,-0.5);
-//                doFor(500);
-//                robot.setLinearPower(0.3); //this changes. lol.
-//                sleep(300);
-//                robot.setLinearPower(0);
-//
-//                sleep(200);
-//                robot.setBasketAngle(0.2);
-//
-//
-//                robot.setLinearPower(-0.3);
-//                sleep(300);
-//                robot.setLinearPower(0);
-//                robot.setBasketAngle(0.25);
-//                robot.drive(-0.5,-1);
-//                doFor(500);
-//
-//            } while(runtime.time()<=25000);
-//            */
-//            //return to storage unit
-//
-            robot.drive(-0.6);
-            robot.strafe(-0.4);
-            doFor(1000);
-
-
-
-            //idk if we will use time but yea here
-            telemetry.addData("Status: ", "Autonomous Terminalized");
-            telemetry.update();
-            break;
+        switch (detector.getLocation()) {
+            case RIGHT:
+                setStage = 1;
+                break;
+            case MIDDLE:
+                setStage = 2;
+                break;
+            case LEFT:
+                setStage = 3;
+                break;
+            case UNKNOWN:
+                setStage = 2;
+                break;
         }
+
+
+        raiseAndDrop(setStage, 0.7);
+
+
+        telemetry.addData("Status: ", "Autonomous Terminalized");
+        telemetry.update();
     }
 
     public void doFor(long ms)
@@ -184,23 +155,18 @@ import com.qualcomm.robotcore.util.Range;
 
     }
 
-    public int determineLevel()
-    {
-        int level = 0;
-        return level;
-    }
 
     public void basketToHeight(double pow, int height)
     {
 
     }
 
-    public void raiseAndDrop(int level, double pow)
+    public void raiseAndDrop(int stage, double pow)
     {
-        double currentHeight = robot.getSlideEncoder(); //assuming it starts at ground level
+        double currentHeight = robot.getSlideEncoder(); //assuming it starts at ground level remember neg is up
         double targetHeight = 0; //where the linear slide wants to go
 
-        switch(level) {
+        switch(stage) {
             case 1:
                 targetHeight = MAXSLIDEHEIGHT / 5.0;
                 while (currentHeight > targetHeight) {
