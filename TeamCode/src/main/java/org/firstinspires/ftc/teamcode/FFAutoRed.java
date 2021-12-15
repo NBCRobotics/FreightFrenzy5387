@@ -54,9 +54,9 @@ import org.openftc.easyopencv.OpenCvViewport;
 
         BarcodeDetector detector = new BarcodeDetector(telemetry);
         cam.setPipeline(detector);
-//        cam.openCameraDeviceAsync(
-//                () -> cam.startStreaming(480, 360, OpenCvCameraRotation.UPRIGHT)
-//        );
+        //cam.openCameraDeviceAsync(
+        //        () -> cam.startStreaming(320, 240, OpenCvCameraRotation.UPRIGHT)
+        //);
 
         waitForStart();
         runtime.reset();

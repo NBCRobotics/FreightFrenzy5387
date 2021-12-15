@@ -23,17 +23,13 @@ public class FFAutoRedCarousel extends LinearOpMode{
         waitForStart();
         runtime.reset();
 
-        robot.drive(-0.5);
-        doFor(500);
-        robot.drive(-0.5,0.5);
-        doFor(2000);
         robot.drive(0.5);
-        doFor(3000);
+        doFor(2000);
         robot.setCarouselPower(1);
         sleep(2000);
         robot.setCarouselPower(0);
-        robot.strafe(-0.5);
-        doFor(750);
+        robot.strafe(1);
+        doFor(500);
     }
     public void doFor(long ms) {
         if(opModeIsActive()) {

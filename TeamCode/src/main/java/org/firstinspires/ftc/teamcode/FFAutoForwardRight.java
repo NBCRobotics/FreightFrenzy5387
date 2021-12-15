@@ -26,9 +26,9 @@ public class FFAutoForwardRight extends LinearOpMode {
 
 
             robot.drive(-0.5);//f
-            doFor(2000);
-            robot.strafe(0.5);
-            doFor(3000);
+            doFor(1100);
+            robot.strafe(1);
+            doFor(1100);
 
 
 
