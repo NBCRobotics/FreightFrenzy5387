@@ -25,10 +25,14 @@ public class FFRobot {
     private DcMotor carousel = null;
     private Servo basket = null;
 
+    private String name = "Aryan is HOT";
+
 
     private int zero = 0;
     private int max = -6700;
     private int min = 0;
+
+    private boolean slideBusy = false;
 
     private int stageTwo = FieldMeasurements.getStageTwoHeight();
     private int stageOne = FieldMeasurements.getStageOneHeight();
@@ -141,8 +145,7 @@ public class FFRobot {
         intake(gp2);
         linearPower(gp2);
         carouselPower(gp2);
-        linearUpStageTwo(stageTwo, gp2);
-        linearUpStageThree(stageThree, gp2);
+
 
 
         this.flDrive.setPower(frontLeftPower/(gp.left_trigger+1));
@@ -211,38 +214,27 @@ public class FFRobot {
     public void linearPower(Gamepad gp){
          //(*-1 bc up is down rn)
         double pow = 0;
-        if (gp.y) {
-            setLinearLevel(linearSlide.getCurrentPosition(), stageThree);
-        }
-        else if (gp.b) {
-            setLinearLevel(linearSlide.getCurrentPosition(), stageTwo);
-        }
-        else if (gp.a) {
-            setLinearLevel(linearSlide.getCurrentPosition(), stageOne);
-        }
+//        if (gp.y) {
+//            linearUpStageX(stageThree);
+//        }
+//        else if (gp.b) {
+//            linearUpStageX(stageTwo);
+//        }
+//        else if (gp.a) {
+//            linearUpStageX(stageOne);
+//        }
 
         //Up - Power negative Encoder is negative
-        if(linearSlide.getCurrentPosition() <= max && gp.left_stick_y < 0)//NEGATIVE IS UP
-            pow = 0;
-        else if(linearSlide.getCurrentPosition() >= min && gp.left_stick_y > 0)//POS IS DOWN
-            pow = 0;
-        else
-            pow = (gp.left_stick_y);
-        linearSlide.setPower(pow);
-         //Left Stick has values from -1 - 1
-                                                //DcMotor power is -1 - 1
-    }
-
-    public void setLinearLevel(double pos, double target) {
-        if (pos >= target-50 && pos <= target-50) {
-            //do nothing, its in range;
-            linearSlide.setPower(0.0);
-        }
-        else if (pos < target) {
-            linearSlide.setPower(0.5);
-        }
-        else if (pos > target) {
-            linearSlide.setPower(-0.5);
+        if (!slideBusy) {
+            if (linearSlide.getCurrentPosition() <= max && gp.left_stick_y < 0)//NEGATIVE IS UP
+                pow = 0;
+            else if (linearSlide.getCurrentPosition() >= min && gp.left_stick_y > 0)//POS IS DOWN
+                pow = 0;
+            else
+                pow = (gp.left_stick_y);
+            linearSlide.setPower(pow);
+            //Left Stick has values from -1 - 1
+            //DcMotor power is -1 - 1
         }
     }
 
@@ -274,7 +266,7 @@ public class FFRobot {
         return linearSlide.getCurrentPosition();
     }
 
-    public void carouselPower(Gamepad gp){ //Blue - Right Trigger || Red - Left Trigger
+    public void carouselPower(Gamepad gp){ //Blue - Left Trigger || Red - Right Trigger
         if(gp.right_trigger > 0)
             carousel.setPower(-(gp.right_trigger));
         else if(gp.left_trigger > 0){
@@ -284,48 +276,19 @@ public class FFRobot {
             carousel.setPower(zero);
     }
 
-    public void linearUpStageTwo(int dis, Gamepad gp){
-        if(gp.b){
-            linearSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            linearSlide.setTargetPosition(dis);
-            if(getSlideEncoder() < dis)
-                setLinearPower(-0.2);
-            else
-                setLinearPower(0.2);
-        }
-        if(getSlideEncoder() == dis){
+    public void linearUpStageX(int dis){
+        linearSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        slideBusy = true;
+        linearSlide.setTargetPosition(dis);
+        if(getSlideEncoder() < dis)
+            setLinearPower(-0.5);
+        else
+            setLinearPower(0.5);
+        if(getSlideEncoder() >= dis-100 && getSlideEncoder() <= dis+100){
             setLinearPower(0.0);
         }
         linearSlide.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        slideBusy = false;
     }
 
-    public void linearUpStageThree(int dis, Gamepad gp) {
-        if (gp.y) {
-            linearSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            linearSlide.setTargetPosition(dis);
-            if (getSlideEncoder() < dis)
-                setLinearPower(-0.4);
-            else
-                setLinearPower(0.4);
-        }
-        if (getSlideEncoder() == dis) {
-            setLinearPower(0.0);
-        }
-        linearSlide.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-    }
-
-    public void linearUpStageOne(int dis, Gamepad gp) {
-        if (gp.a) {
-            linearSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            linearSlide.setTargetPosition(dis);
-            if (getSlideEncoder() < dis)
-                setLinearPower(-0.4);
-            else
-                setLinearPower(0.4);
-        }
-        if (getSlideEncoder() == dis) {
-            setLinearPower(0.0);
-        }
-        linearSlide.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-    }
 }

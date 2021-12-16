@@ -48,6 +48,7 @@ public class BarcodeDetector extends OpenCvPipeline {
         middle.release();
         left.release();
 
+
         boolean onRight = rightValue > 0.4;
         boolean onMiddle = middleValue > 0.4;
         boolean onLeft = leftValue > 0.4;

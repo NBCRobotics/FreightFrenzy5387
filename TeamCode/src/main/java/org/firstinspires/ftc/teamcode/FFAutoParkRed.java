@@ -8,7 +8,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 
-@Autonomous(name="FFAutoParkRed", group="LinearOpMode")
+@Autonomous(name="literally going forward", group="LinearOpMode")
 public class FFAutoParkRed extends LinearOpMode {
     FFRobot robot = new FFRobot();
 

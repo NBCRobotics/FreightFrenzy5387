@@ -8,7 +8,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 
-@Autonomous(name="FFAutoParkBlue", group="LinearOpMode")
+@Autonomous(name="FFAutoBlueCarousel", group="LinearOpMode")
 public class FFAutoBlueCarousel extends LinearOpMode {
     FFRobot robot = new FFRobot();
 
@@ -24,19 +24,15 @@ public class FFAutoBlueCarousel extends LinearOpMode {
         waitForStart();
         runtime.reset();
 
+        robot.strafe(1);
+        doFor(FieldMeasurements.TIME_FOR_TILE);
 
-            robot.strafe(0.5);
-            doFor(3000);
-            robot.drive(-0.1);
-            doFor(1000);
-            robot.setCarouselPower(1);
-            sleep(1000);
-            robot.setCarouselPower(0);
+        robot.setCarouselPower(0.5);
+        sleep(3000);
+        robot.setCarouselPower(0);
 
-
-
-
-
+        robot.drive(-0.5);
+        doFor(FieldMeasurements.TIME_FOR_TILE);
     }
 
     public void doFor(long ms) {

@@ -24,18 +24,11 @@ public class FFAutoForwardLeft extends LinearOpMode {
         waitForStart();
         runtime.reset();
 
-
-        robot.setLinearPower(-0.1);
-        sleep(500);
-        robot.setLinearPower(0);
-
-            robot.drive(-0.5);//f
-            doFor(1250);
-            robot.strafe(-0.5);
-            doFor(2000);
-
-
-
+        robot.drive(-0.5);
+        doFor(FieldMeasurements.TIME_FOR_TILE);
+        //
+        robot.strafe(-1);
+        doFor(FieldMeasurements.TIME_FOR_TILE);
 
     }
 

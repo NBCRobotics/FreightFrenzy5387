@@ -18,7 +18,7 @@ import org.openftc.easyopencv.OpenCvViewport;
 //Made by Andrew Hu
 
 @Autonomous(name="FFAutoRed", group="LinearOpMode")
-//@Disabled
+@Disabled
 //RED
     public class FFAutoRed extends LinearOpMode {
     FFRobot robot = new FFRobot();

@@ -11,7 +11,7 @@ import com.qualcomm.robotcore.util.Range;
 //Made by Andrew Hu
 
 @Autonomous(name="FFAutoBlue", group="LinearOpMode")
-//@Disabled
+@Disabled
 //RED
 public class FFAutoBlue extends LinearOpMode {
     FFRobot robot = new FFRobot();
