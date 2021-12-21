@@ -8,6 +8,10 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 
+import org.openftc.easyopencv.OpenCvCamera;
+import org.openftc.easyopencv.OpenCvCameraFactory;
+import org.openftc.easyopencv.OpenCvInternalCamera;
+
 //Made by Andrew Hu
 
 @Autonomous(name="FFAutoBlue", group="LinearOpMode")
@@ -32,6 +36,8 @@ public class FFAutoBlue extends LinearOpMode {
 
     final int carouselPos = 0;
 
+    OpenCvCamera cam;
+
     @Override
     public void runOpMode() {
         telemetry.addData("Status", "Initialized");
@@ -42,51 +48,14 @@ public class FFAutoBlue extends LinearOpMode {
         runtime.reset();
 
         while (opModeIsActive()) {
-            //carousel
-            robot.drive(0.5);
-            doFor(500);
-            sleep(400);
-            robot.strafe(0.5); //right
-            doFor(2000);
-            sleep(400);
-            robot.setCarouselPower(-0.5);
-            doFor(2000);
-            robot.setCarouselPower(0);
 
-            //pre load box on specified level
-            robot.strafe(-0.5);
-            doFor(1750);
-            sleep(400);
-            robot.drive(0.5);
-            doFor(750);
-
-
-            robot.drive(-1,-0.5);   //ok this is kinda random rn
-            doFor(1000);                   //doesn't guarantee that the robot will be fully in the parking spot
+            int camID = hardwareMap.appContext.getResources()
+                    .getIdentifier("camID", "id", hardwareMap.appContext.getPackageName());
+            cam = OpenCvCameraFactory.getInstance()
+                    .createInternalCamera(OpenCvInternalCamera.CameraDirection.FRONT, camID);
 
 
 
-
-
-            /*do {
-                robot.drive(1);
-                doFor(1000);
-                robot.turnIntake();
-            } while(runtime.time()<=25000);
-
-             */
-            //return to station
-
-            robot.drive(-0.6);
-            robot.strafe(0.4);
-            doFor(1000);
-
-            //with encoders
-
-//            driveDistance(0.5, 300);
-//            strafeDistance(0.5, 3728);
-
-            // Show the elapsed game time and wheel power.
             telemetry.addData("Status", "Runn Time: " + runtime.toString());
             telemetry.update();
             break;

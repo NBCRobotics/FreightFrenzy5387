@@ -25,8 +25,6 @@ public class FFRobot {
     private DcMotor carousel = null;
     private Servo basket = null;
 
-    private String name = "Aryan is HOT";
-
 
     private int zero = 0;
     private int max = -6700;
@@ -148,10 +146,10 @@ public class FFRobot {
 
 
 
-        this.flDrive.setPower(frontLeftPower/(gp.left_trigger+1));
-        this.blDrive.setPower(backLeftPower/(gp.left_trigger+1));
-        this.frDrive.setPower(frontRightPower/(gp.left_trigger+1));
-        this.brDrive.setPower(backRightPower/(gp.left_trigger+1));
+        this.flDrive.setPower(frontLeftPower/(gp.left_trigger+1.5));
+        this.blDrive.setPower(backLeftPower/(gp.left_trigger+1.5));
+        this.frDrive.setPower(frontRightPower/(gp.left_trigger+1.5));
+        this.brDrive.setPower(backRightPower/(gp.left_trigger+1.5));
 
     }
     public double getFrontLeftPower(){
@@ -204,9 +202,9 @@ public class FFRobot {
     //GamePad 2 Methods
     public void intake(Gamepad gp){
         if (gp.right_stick_y > 0)
-            intake.setPower(gp.right_stick_y);
+            intake.setPower(gp.right_stick_y); //intake
         else if (gp.right_stick_y < 0)
-            intake.setPower(gp.right_stick_y);
+            intake.setPower(gp.right_stick_y); //outtake
         else
             intake.setPower(0);
 
@@ -268,9 +266,9 @@ public class FFRobot {
 
     public void carouselPower(Gamepad gp){ //Blue - Left Trigger || Red - Right Trigger
         if(gp.right_trigger > 0)
-            carousel.setPower(-(gp.right_trigger));
+            carousel.setPower(-(gp.right_trigger)/2);
         else if(gp.left_trigger > 0){
-            carousel.setPower((gp.left_trigger));
+            carousel.setPower((gp.left_trigger)/2);
         }
         else
             carousel.setPower(zero);
@@ -285,7 +283,7 @@ public class FFRobot {
         else
             setLinearPower(0.5);
         if(getSlideEncoder() >= dis-100 && getSlideEncoder() <= dis+100){
-            setLinearPower(0.0);
+            setLinearPower(zero);
         }
         linearSlide.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         slideBusy = false;
