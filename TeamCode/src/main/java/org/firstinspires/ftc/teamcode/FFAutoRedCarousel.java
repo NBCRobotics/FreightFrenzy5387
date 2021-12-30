@@ -8,6 +8,8 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 
+import java.lang.reflect.Field;
+
 @Autonomous(name = "FFAutoRedCarousel", group = "Carousel")
 public class FFAutoRedCarousel extends LinearOpMode{
     FFRobot robot = new FFRobot();
@@ -23,24 +25,28 @@ public class FFAutoRedCarousel extends LinearOpMode{
         waitForStart();
         runtime.reset();
 
-        robot.drive(-0.5);
-        doFor();
+        robot.strafe(-1);
+        doFor(200);
+
+        robot.drive(0.5);
+        doFor(FieldMeasurements.TIME_FOR_TILE);
         //cant turn if backed up against wall
 
-        robot.drive(1,-1);
-        doFor(); //should be a 90 degree right turn
+
 
         //robot.drive(0.5); //backwards actually
         //doFor(FieldMeasurements.TIME_FOR_TILE);
 
 
         robot.setCarouselPower(0.5);
-        sleep(3000);
+        sleep(6000);
         robot.setCarouselPower(0);
 
         robot.strafe(-1); //left
         doFor(FieldMeasurements.TIME_FOR_TILE);
         //done
+        robot.drive(0.5);
+        doFor(300);
 
         telemetry.addData("Status: ", "Autonomous Finished");
         telemetry.update();

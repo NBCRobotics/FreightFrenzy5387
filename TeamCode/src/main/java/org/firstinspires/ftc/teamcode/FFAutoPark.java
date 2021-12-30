@@ -9,7 +9,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 
 @Autonomous(name="literally going forward", group="LinearOpMode")
-public class FFAutoParkRed extends LinearOpMode {
+public class FFAutoPark extends LinearOpMode {
     FFRobot robot = new FFRobot();
 
     private ElapsedTime runtime = new ElapsedTime();

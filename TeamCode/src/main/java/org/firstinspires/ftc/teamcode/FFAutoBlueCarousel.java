@@ -24,15 +24,18 @@ public class FFAutoBlueCarousel extends LinearOpMode {
         waitForStart();
         runtime.reset();
 
+        robot.drive(-0.5);
+        doFor(200);
+
         robot.strafe(1);
         doFor(FieldMeasurements.TIME_FOR_TILE);
 
-        robot.setCarouselPower(0.5);
-        sleep(3000);
+        robot.setCarouselPower(-0.5);
+        sleep(6000);
         robot.setCarouselPower(0);
 
         robot.drive(-0.5);
-        doFor(FieldMeasurements.TIME_FOR_TILE);
+        doFor(1000);
     }
 
     public void doFor(long ms) {
