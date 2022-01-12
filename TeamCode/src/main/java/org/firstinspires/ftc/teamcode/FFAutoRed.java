@@ -52,11 +52,18 @@ import org.openftc.easyopencv.OpenCvViewport;
         cam = OpenCvCameraFactory.getInstance()
                 .createInternalCamera(OpenCvInternalCamera.CameraDirection.FRONT, camID);
 
-        BarcodeDetector detector = new BarcodeDetector(telemetry);
+        BarcodeDetector detector = new BarcodeDetector(telemetry); //barcode
         cam.setPipeline(detector);
-        //cam.openCameraDeviceAsync(
-        //        () -> cam.startStreaming(320, 240, OpenCvCameraRotation.UPRIGHT)
-        //);
+        cam.openCameraDeviceAsync(new OpenCvCamera.AsyncCameraOpenListener() {
+            @Override
+            public void onOpened() {
+                camera.startStreaming(1280, 720, OpenCvCameraRotation.UPRIGHT);
+            }
+            @Override
+            public void onError(int errorCode) {
+
+            }
+        });
 
         waitForStart();
         runtime.reset();
