@@ -20,6 +20,7 @@ import org.openftc.easyopencv.OpenCvInternalCamera;
 public class FFAutoBlue extends LinearOpMode {
     FFRobot robot = new FFRobot();
     // Declare OpMode members.
+    //fsadas
     private ElapsedTime runtime = new ElapsedTime();
 
     final int MAXSLIDEHEIGHT = robot.getMax();
