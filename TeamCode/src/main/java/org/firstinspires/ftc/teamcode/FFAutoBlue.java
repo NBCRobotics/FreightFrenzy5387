@@ -10,6 +10,7 @@ import com.qualcomm.robotcore.util.Range;
 
 import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraFactory;
+import org.openftc.easyopencv.OpenCvCameraRotation;
 import org.openftc.easyopencv.OpenCvInternalCamera;
 
 //Made by Andrew Hu
@@ -25,9 +26,6 @@ public class FFAutoBlue extends LinearOpMode {
 
     final int MAXSLIDEHEIGHT = robot.getMax();
     final int MINSLIDEHEIGHT = robot.getMin();
-
-    DcMotor blDrive = robot.getBlDrive();
-    DcMotor brDrive = robot.getBrDrive();
 
     final int ticksPerRev = 1440;
     //0.2103 mm per tick
@@ -45,22 +43,28 @@ public class FFAutoBlue extends LinearOpMode {
         telemetry.update();
         robot.init(hardwareMap);
 
+        int camID = hardwareMap.appContext.getResources()
+                .getIdentifier("camID", "id", hardwareMap.appContext.getPackageName());
+        cam = OpenCvCameraFactory.getInstance()
+                .createInternalCamera(OpenCvInternalCamera.CameraDirection.FRONT, camID);
+
+        BarcodeDetector detector = new BarcodeDetector(telemetry); //barcode
+        cam.setPipeline(detector);
+        cam.openCameraDeviceAsync(new OpenCvCamera.AsyncCameraOpenListener() {
+            @Override
+            public void onOpened() {
+                cam.startStreaming(1280, 720, OpenCvCameraRotation.UPRIGHT);
+            }
+            @Override
+            public void onError(int errorCode) {
+
+            }
+        });
+
         waitForStart();
         runtime.reset();
 
-        while (opModeIsActive()) {
 
-            int camID = hardwareMap.appContext.getResources()
-                    .getIdentifier("camID", "id", hardwareMap.appContext.getPackageName());
-            cam = OpenCvCameraFactory.getInstance()
-                    .createInternalCamera(OpenCvInternalCamera.CameraDirection.FRONT, camID);
-
-
-
-            telemetry.addData("Status", "Runn Time: " + runtime.toString());
-            telemetry.update();
-            break;
-        }
     }
 
     public void doFor(long ms) {
@@ -71,57 +75,6 @@ public class FFAutoBlue extends LinearOpMode {
     public void doFor()
     {
         this.doFor(400);
-    }
-
-    public void driveDistance(double pow, int dis)
-    {
-        this.blDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        this.brDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        //after resetting, set runmode to to pos
-        this.blDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        this.brDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-
-        this.blDrive.setTargetPosition(-dis);   //the strafe method sets the power of bl to negtative
-        this.brDrive.setTargetPosition(dis);
-
-
-        //two of the pos is needed for the others the motors will "travel" the same amount
-        //then based on the time and power needed to travel to that position, set all other motors
-
-        robot.drive(pow);
-        while (blDrive.isBusy() && brDrive.isBusy())
-        {
-
-        }
-        this.blDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        this.brDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        robot.brake();
-    }
-
-    public void strafeDistance(double pow, int dis)
-    {
-        this.blDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        this.brDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        //after resetting, set runmode to to pos
-        this.blDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        this.brDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-
-
-        this.blDrive.setTargetPosition(-dis);   //the strafe method sets the power of bl to negtative
-        this.brDrive.setTargetPosition(dis);
-        //two of the pos is needed of the motors is needed all of them will "travel" the same amount
-        //then based on the time and power needed to travel to that position, set all other motors
-
-        robot.strafe(pow);
-        while (blDrive.isBusy() && brDrive.isBusy())
-        {
-
-        }
-
-        robot.brake();
-        this.blDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        this.brDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        //i totally did not copy and paste the driveDistance method
     }
 
     public int determineLevel() {
