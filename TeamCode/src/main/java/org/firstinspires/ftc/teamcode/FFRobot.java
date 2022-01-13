@@ -23,7 +23,6 @@ public class FFRobot {
 
     private DcMotor linearSlide = null;//Tesrng btiyuc
     private DcMotor carousel = null;
-    private Servo basket = null;
     private CRServo arm = null;
 
 
@@ -40,8 +39,8 @@ public class FFRobot {
 
 
 
-    DcMotorSimple.Direction motF = DcMotorSimple.Direction.FORWARD; //setting directions
-    DcMotorSimple.Direction motR = DcMotorSimple.Direction.REVERSE; //i.e., motR is now the reverse direction
+    DcMotorSimple.Direction motF = DcMotorSimple.Direction.FORWARD;
+    DcMotorSimple.Direction motR = DcMotorSimple.Direction.REVERSE;
     Servo.Direction serR = Servo.Direction.REVERSE;
     Servo.Direction serF = Servo.Direction.FORWARD;
 
@@ -55,7 +54,6 @@ public class FFRobot {
         this.intake = hwdMap.get(DcMotor.class, "intake");
         this.linearSlide = hwdMap.get(DcMotor.class, "linearSlide");
         this.carousel = hwdMap.get(DcMotor.class, "carousel");
-        this.basket = hwdMap.get(Servo.class, "basket");
         this.arm = hwdMap.get(CRServo.class, "arm");
 
         //intake.resetDeviceConfigurationForOpMode();
@@ -130,7 +128,7 @@ public class FFRobot {
         }
         intake(gp2);
         linearPower(gp2);
-
+        armPower(gp2);
 
         carouselPower(gp);
         this.flDrive.setPower(frontLeftPower/(gp.left_trigger+1.5));
@@ -164,10 +162,6 @@ public class FFRobot {
         linearSlide.setPower(pow);
     }
 
-    public void setBasketAngle(double angle){
-        basket.setPosition(angle);
-    }
-
     public void turnIntake(double pow){
         intake.setPower(pow);
     }
@@ -182,14 +176,40 @@ public class FFRobot {
 
     public void setArmPower(double pow) { arm.setPower(pow); }
 
+    //Gamepad 1 Methods
+    public void carouselPower(Gamepad gp){ //Blue - Left Trigger || Red - Right Trigger
+        if(gp.right_trigger > 0)
+            carousel.setPower(-(gp.right_trigger)/2);
+        else if(gp.left_trigger > 0){
+            carousel.setPower((gp.left_trigger)/2);
+        }
+        else
+            carousel.setPower(zero);
+    }
+
+
     //GamePad 2 Methods
     public void intake(Gamepad gp){
-        if (gp.right_stick_y > 0)
-            intake.setPower(gp.right_stick_y); //intake
-        else if (gp.right_stick_y < 0)
-            intake.setPower(gp.right_stick_y); //outtake
+        if (gp.right_stick_y != 0)
+            intake.setPower(gp.right_stick_y);
         else
             intake.setPower(0);
+
+//        if (gp.right_stick_y > 0)
+//            intake.setPower(gp.right_stick_y); //intake
+//        else if (gp.right_stick_y < 0)
+//            intake.setPower(gp.right_stick_y); //outtake
+//        else
+//            intake.setPower(0);
+    }
+
+    public void armPower(Gamepad gp){
+        if (gp.left_bumper)
+            arm.setPower(0.5);
+        else if (gp.right_bumper)
+            arm.setPower(-0.5);
+        else
+            arm.setPower(0.0);
     }
 
     public void linearPower(Gamepad gp){
@@ -245,16 +265,6 @@ public class FFRobot {
 
     public double getSlideEncoder(){
         return linearSlide.getCurrentPosition();
-    }
-
-    public void carouselPower(Gamepad gp){ //Blue - Left Trigger || Red - Right Trigger
-        if(gp.right_trigger > 0)
-            carousel.setPower(-(gp.right_trigger)/2);
-        else if(gp.left_trigger > 0){
-            carousel.setPower((gp.left_trigger)/2);
-        }
-        else
-            carousel.setPower(zero);
     }
 
     public void linearUpStageX(int dis){

@@ -8,6 +8,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 
+import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraFactory;
 import org.openftc.easyopencv.OpenCvCameraRotation;
@@ -34,7 +35,7 @@ import org.openftc.easyopencv.OpenCvViewport;
     //609.6 millimeters per square
     //3728.44037 ticks per square
     final int carouselPos = 0;
-    private int setStage = 0;
+    private int stage = 0;
 
     OpenCvCamera cam;
     @Override
@@ -45,15 +46,15 @@ import org.openftc.easyopencv.OpenCvViewport;
 
         int camID = hardwareMap.appContext.getResources()
                 .getIdentifier("camID", "id", hardwareMap.appContext.getPackageName());
-        cam = OpenCvCameraFactory.getInstance()
-                .createInternalCamera(OpenCvInternalCamera.CameraDirection.FRONT, camID);
+        WebcamName webcamName = hardwareMap.get(WebcamName.class, "313");
+        OpenCvCamera cam = OpenCvCameraFactory.getInstance().createWebcam(webcamName, camID);
 
         BarcodeDetector detector = new BarcodeDetector(telemetry); //barcode
         cam.setPipeline(detector);
         cam.openCameraDeviceAsync(new OpenCvCamera.AsyncCameraOpenListener() {
             @Override
             public void onOpened() {
-                cam.startStreaming(1280, 720, OpenCvCameraRotation.UPRIGHT);
+                cam.startStreaming(640, 480, OpenCvCameraRotation.UPRIGHT);
             }
             @Override
             public void onError(int errorCode) {
@@ -66,16 +67,16 @@ import org.openftc.easyopencv.OpenCvViewport;
 
         switch (detector.getLocation()) {
             case RIGHT:
-                setStage = 1;
+                stage = 1;
                 break;
             case MIDDLE:
-                setStage = 2;
+                stage = 2;
                 break;
             case LEFT:
-                setStage = 3;
+                stage = 3;
                 break;
             case UNKNOWN:
-                setStage = 2;
+                stage = 2;
                 break;
         }
 
@@ -83,7 +84,9 @@ import org.openftc.easyopencv.OpenCvViewport;
         //raiseAndDrop(setStage, 0.5);
 
 
+
         telemetry.addData("Status: ", "Autonomous Terminalized");
+        telemetry.addData("Status: ", "Stage is set to" + stage);
         telemetry.update();
     }
 
@@ -97,12 +100,6 @@ import org.openftc.easyopencv.OpenCvViewport;
     {
         this.doFor(1000);
     }
-
-    public void turnAngle(int angle)
-    {
-
-    }
-
 
     public void basketToHeight(double pow, int height)
     {
