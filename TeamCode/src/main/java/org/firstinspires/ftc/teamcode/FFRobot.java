@@ -23,7 +23,7 @@ public class FFRobot {
 
     private DcMotor linearSlide = null;//Tesrng btiyuc
     private DcMotor carousel = null;
-    private CRServo arm = null;
+    private Servo arm = null;
 
 
     private int zero = 0;
@@ -54,7 +54,7 @@ public class FFRobot {
         this.intake = hwdMap.get(DcMotor.class, "intake");
         this.linearSlide = hwdMap.get(DcMotor.class, "linearSlide");
         this.carousel = hwdMap.get(DcMotor.class, "carousel");
-        this.arm = hwdMap.get(CRServo.class, "arm");
+        this.arm = hwdMap.get(Servo.class, "arm");
 
         //intake.resetDeviceConfigurationForOpMode();
 
@@ -64,7 +64,7 @@ public class FFRobot {
         this.flDrive.setDirection(motF);
         this.frDrive.setDirection(motR);
         this.linearSlide.setDirection(motR);
-        this.arm.setDirection(motR);
+        this.arm.setDirection(serR);
         this.blDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         this.brDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         this.linearSlide.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
@@ -174,7 +174,7 @@ public class FFRobot {
         this.drive(0.0);
     }
 
-    public void setArmPower(double pow) { arm.setPower(pow); }
+   // public void setArmPower(double pow) { arm.setPower(pow); }
 
     //Gamepad 1 Methods
     public void carouselPower(Gamepad gp){ //Blue - Left Trigger || Red - Right Trigger
@@ -205,11 +205,11 @@ public class FFRobot {
 
     public void armPower(Gamepad gp){
         if (gp.left_bumper)
-            arm.setPower(0.5);
+            arm.setPosition(0);
         else if (gp.right_bumper)
-            arm.setPower(-0.5);
+            arm.setPosition(1);
         else
-            arm.setPower(0.0);
+            arm.setPosition(0.5);
     }
 
     public void linearPower(Gamepad gp){
