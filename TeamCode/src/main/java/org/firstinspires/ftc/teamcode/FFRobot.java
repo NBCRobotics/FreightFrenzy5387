@@ -131,10 +131,11 @@ public class FFRobot {
         armPower(gp2);
 
         carouselPower(gp);
-        this.flDrive.setPower(frontLeftPower/(gp.left_trigger+1.5));
-        this.blDrive.setPower(backLeftPower/(gp.left_trigger+1.5));
-        this.frDrive.setPower(frontRightPower/(gp.left_trigger+1.5));
-        this.brDrive.setPower(backRightPower/(gp.left_trigger+1.5));
+        int slowDown = gp.left_bumper ? 1 : 0;
+        this.flDrive.setPower(frontLeftPower/(slowDown)+1.5);
+        this.blDrive.setPower(backLeftPower/(slowDown+1.5));
+        this.frDrive.setPower(frontRightPower/(slowDown+1.5));
+        this.brDrive.setPower(backRightPower/(slowDown+1.5));
     }
 
     public double getFrontLeftPower(){
