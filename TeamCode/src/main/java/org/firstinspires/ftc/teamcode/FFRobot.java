@@ -205,11 +205,15 @@ public class FFRobot {
 
     public void armPower(Gamepad gp){
         if (gp.left_bumper)
-            arm.setPosition(0);
+            arm.setPosition(0.45);
         else if (gp.right_bumper)
-            arm.setPosition(1);
+            arm.setPosition(0.55);
         else
             arm.setPosition(0.5);
+    }
+    public void setArm(double pos){
+        arm.setPosition(pos);
+
     }
 
     public void linearPower(Gamepad gp){

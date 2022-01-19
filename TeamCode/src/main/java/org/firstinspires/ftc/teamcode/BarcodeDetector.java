@@ -26,10 +26,12 @@ public class BarcodeDetector extends OpenCvPipeline {
     static final Rect RIGHT_ROI = new Rect(new Point(0, 0), new Point(5, 5));
     static final Rect MIDDLE_ROI = new Rect(new Point(0, 0), new Point(5, 5));
     static final Rect LEFT_ROI = new Rect(new Point(0, 0), new Point(5, 5)); //CHANGE THIS ONCE CAMERA IS MOUTNED!
+    /*
+    This is prob misplaced so i moved it to processFrame
     Mat right = mat.submat(RIGHT_ROI);
     Mat middle = mat.submat(MIDDLE_ROI);
     Mat left = mat.submat(LEFT_ROI);
-
+    */
 
     //looks for CAPSTONE pos
     @Override
@@ -40,6 +42,11 @@ public class BarcodeDetector extends OpenCvPipeline {
 
         Core.inRange(mat, lowHSV, highHSV, mat);
 
+        Mat right = mat.submat(RIGHT_ROI);
+        Mat middle = mat.submat(MIDDLE_ROI);
+        Mat left = mat.submat(LEFT_ROI);
+
+
         double rightValue = Core.sumElems(right).val[0] / RIGHT_ROI.area() / 255;
         double middleValue = Core.sumElems(middle).val[0] / MIDDLE_ROI.area() / 255;
         double leftValue = Core.sumElems(left).val[0] / LEFT_ROI.area() / 255;        //how much of the area is the desired color
@@ -48,7 +55,7 @@ public class BarcodeDetector extends OpenCvPipeline {
         middle.release();
         left.release();
 
-        boolean onRight = rightValue > 0.4;
+        boolean onRight = rightValue > 0.4; // is percent that it blue so 40%
         boolean onMiddle = middleValue > 0.4;
         boolean onLeft = leftValue > 0.4;
 
