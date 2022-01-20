@@ -8,6 +8,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 
+import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraFactory;
@@ -15,6 +16,7 @@ import org.openftc.easyopencv.OpenCvCameraRotation;
 import org.openftc.easyopencv.OpenCvInternalCamera;
 import org.openftc.easyopencv.OpenCvPipeline;
 import org.openftc.easyopencv.OpenCvViewport;
+import org.openftc.easyopencv.OpenCvWebcam;
 
 //Made by Andrew Hu
 
@@ -37,30 +39,52 @@ import org.openftc.easyopencv.OpenCvViewport;
     final int carouselPos = 0;
     private int stage = 0;
 
-    OpenCvCamera cam;
+    OpenCvInternalCamera cam;
+
+    //OpenCvWebcam cam;
     @Override
     public void runOpMode() {
         telemetry.addData("Status", "Initialized");
         telemetry.update();
         robot.init(hardwareMap);
 
-        int camID = hardwareMap.appContext.getResources()
-                .getIdentifier("camID", "id", hardwareMap.appContext.getPackageName());
-        WebcamName webcamName = hardwareMap.get(WebcamName.class, "313");
-        OpenCvCamera cam = OpenCvCameraFactory.getInstance().createWebcam(webcamName, camID);
+//        int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
+//        cam = OpenCvCameraFactory.getInstance().createWebcam(hardwareMap.get(WebcamName.class, "Webcam 1"), cameraMonitorViewId);
+//
+//
+//        BarcodeDetector detector = new BarcodeDetector(telemetry); //barcode
+//        cam.setPipeline(detector);
+//        cam.setMillisecondsPermissionTimeout(2500);
+//        cam.openCameraDeviceAsync(new OpenCvCamera.AsyncCameraOpenListener() {
+//            @Override
+//            public void onOpened() {
+//                cam.startStreaming(640, 480, OpenCvCameraRotation.UPRIGHT);
+//            }
+//            @Override
+//            public void onError(int errorCode) {
+//                telemetry.addData("Error: ", "Webcam could be opened" + errorCode);
+//            }
+//        });
 
-        BarcodeDetector detector = new BarcodeDetector(telemetry); //barcode
+        int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
+        cam = OpenCvCameraFactory.getInstance().createInternalCamera(OpenCvInternalCamera.CameraDirection.BACK, cameraMonitorViewId);
+
+        BarcodeDetector detector = new BarcodeDetector(telemetry);
         cam.setPipeline(detector);
         cam.openCameraDeviceAsync(new OpenCvCamera.AsyncCameraOpenListener() {
             @Override
             public void onOpened() {
-                cam.startStreaming(640, 480, OpenCvCameraRotation.UPRIGHT);
+                cam.startStreaming(320, 240, OpenCvCameraRotation.SIDEWAYS_RIGHT);
             }
+
             @Override
             public void onError(int errorCode) {
-
+                telemetry.addData("Error: ", errorCode + "Camera not started");
             }
         });
+
+
+
 
         waitForStart();
         runtime.reset();

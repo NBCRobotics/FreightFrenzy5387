@@ -28,7 +28,7 @@ public class FFRobot {
 
     private int zero = 0;
     private int max = -6700;
-    private int min = 0;
+    private int min = -500;
 
     private boolean slideBusy = false;
 
@@ -131,11 +131,11 @@ public class FFRobot {
         armPower(gp2);
 
         carouselPower(gp);
-        int slowDown = gp.left_bumper ? 1 : 0;
-        this.flDrive.setPower(frontLeftPower/(slowDown)+1.5);
-        this.blDrive.setPower(backLeftPower/(slowDown+1.5));
-        this.frDrive.setPower(frontRightPower/(slowDown+1.5));
-        this.brDrive.setPower(backRightPower/(slowDown+1.5));
+        int slowDown = gp.left_bumper ? 2 : 1;
+        this.flDrive.setPower(frontLeftPower/slowDown);
+        this.blDrive.setPower(backLeftPower/slowDown);
+        this.frDrive.setPower(frontRightPower/slowDown);
+        this.brDrive.setPower(backRightPower/slowDown);
     }
 
     public double getFrontLeftPower(){
@@ -190,18 +190,11 @@ public class FFRobot {
 
 
     //GamePad 2 Methods
-    public void intake(Gamepad gp){
+    public void intake(Gamepad gp) { //neg is push out
         if (gp.right_stick_y != 0)
             intake.setPower(gp.right_stick_y);
         else
             intake.setPower(0);
-
-//        if (gp.right_stick_y > 0)
-//            intake.setPower(gp.right_stick_y); //intake
-//        else if (gp.right_stick_y < 0)
-//            intake.setPower(gp.right_stick_y); //outtake
-//        else
-//            intake.setPower(0);
     }
 
     public void armPower(Gamepad gp){

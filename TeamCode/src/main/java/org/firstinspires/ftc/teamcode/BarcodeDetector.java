@@ -22,10 +22,10 @@ public class BarcodeDetector extends OpenCvPipeline {
         LEFT, //stage three
         UNKNOWN
     }
-    Location location = null;
-    static final Rect RIGHT_ROI = new Rect(new Point(0, 0), new Point(5, 5));
-    static final Rect MIDDLE_ROI = new Rect(new Point(0, 0), new Point(5, 5));
-    static final Rect LEFT_ROI = new Rect(new Point(0, 0), new Point(5, 5)); //CHANGE THIS ONCE CAMERA IS MOUTNED!
+    private Location location;
+    static final Rect RIGHT_ROI = new Rect(new Point(0, 20), new Point(40, 60));
+    static final Rect MIDDLE_ROI = new Rect(new Point(80, 20), new Point(120, 60));
+    static final Rect LEFT_ROI = new Rect(new Point(200, 20), new Point(240, 60)); //CHANGE THIS ONCE CAMERA IS MOUTNED!
     /*
     This is prob misplaced so i moved it to processFrame
     Mat right = mat.submat(RIGHT_ROI);
@@ -37,8 +37,8 @@ public class BarcodeDetector extends OpenCvPipeline {
     @Override
     public Mat processFrame(Mat input) {
         Imgproc.cvtColor(input, mat, Imgproc.COLOR_RGB2HSV);
-        Scalar lowHSV = new Scalar(206, 43, 95);  //lowest value that (Capstone color can be
-        Scalar highHSV = new Scalar(239, 255, 255); //highest value that BLUE (Capstone color) will be
+        Scalar lowHSV = new Scalar(226, 43, 20);  //lowest value that Capstone color can be
+        Scalar highHSV = new Scalar(250, 255, 255); //highest value that BLUE (Capstone color) will be
 
         Core.inRange(mat, lowHSV, highHSV, mat);
 
