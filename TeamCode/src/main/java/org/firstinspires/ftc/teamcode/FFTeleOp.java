@@ -9,7 +9,7 @@ public class FFTeleOp extends OpMode {
 
     @Override
     public void init() {
-        //WHY
+        //WHY    ??
         telemetry.addData("Status", "Initialized");
         telemetry.update();
 
@@ -23,7 +23,7 @@ public class FFTeleOp extends OpMode {
     @Override
     public void loop() {
         robot.mechanumPov(gamepad1,gamepad2);
-        //robot.setArm(0.5);
+        //robot.setArm(0.5); ??? lol
         telemetry.addData("Drive Motors: ", "\nFront Left: " +robot.getFrontLeftPower()+
                 "\n Back Left: " + robot.getBackLeftPower() + "\nFront Right" + robot.getFrontRightPower() +
                 "\nBack Right: " + robot.getBackRightPower());

@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode;
 
+import static java.lang.Math.abs;
+
 import android.graphics.Path;
 
 import com.qualcomm.hardware.motors.RevRoboticsCoreHexMotor;
@@ -25,24 +27,24 @@ public class FFRobot {
     private DcMotor carousel = null;
     private Servo arm = null;
 
-
-    private int zero = 0;
-    private int max = -6700;
-    private int min = -500;
+    private int zero = 0;   //linear slide encoders
+    private int max = 6700;
+    private int min = 500;
 
     private boolean slideBusy = false;
+    private boolean[] currentState = {false, false, false};
+    private boolean[] lastState = {false, false, false};
+    private long[] lastPressed = {0, 0, 0};
 
-    private int stageTwo = FieldMeasurements.getStageTwoHeight();
-    private int stageOne = FieldMeasurements.getStageOneHeight();
-    private int stageThree = FieldMeasurements.getStageThreeHeight();
-    //COmment
-
-
+    private int stageTwo = -1*FieldMeasurements.getStageTwoHeight();
+    private int stageOne = -1*FieldMeasurements.getStageOneHeight();
+    private int stageThree = -1*FieldMeasurements.getStageThreeHeight();
 
     DcMotorSimple.Direction motF = DcMotorSimple.Direction.FORWARD;
     DcMotorSimple.Direction motR = DcMotorSimple.Direction.REVERSE;
     Servo.Direction serR = Servo.Direction.REVERSE;
     Servo.Direction serF = Servo.Direction.FORWARD;
+
 
 
     public void init(HardwareMap hwdMap){
@@ -57,7 +59,6 @@ public class FFRobot {
         this.arm = hwdMap.get(Servo.class, "arm");
 
         //intake.resetDeviceConfigurationForOpMode();
-
 
         this.blDrive.setDirection(motF); //as declared before motF is forward motR is reverse
         this.brDrive.setDirection(motR);
@@ -94,11 +95,18 @@ public class FFRobot {
         frDrive.setPower(pow); //MOTR       //A:WAYS INPUT 1 LMAO
     }
 
+    public void strafe(String s, double pow) {
+        pow = Math.abs(pow);
+        if (s.equals("right"))
+            this.strafe(pow);
+        else if (s.equals("left"))
+            this.strafe(-pow);
+    }
+
     public void mechanumPov(Gamepad gp, Gamepad gp2){
         double drive = (double) (gp.left_stick_y);
         double turn = (double) ((gp.left_stick_x) * -1);
         double strafe = (double) ((gp.right_stick_x) * -1);
-
 
         double nor = 0.0; //normal drive power
 
@@ -117,13 +125,13 @@ public class FFRobot {
         double newfrPower = y - x - rx;
         double newbrPower = y + x - rx;
 
-        if(Math.abs(backRightPower) > 1 || Math.abs(backLeftPower) > 1 ||
-                Math.abs(frontRightPower) > 1 || Math.abs(frontLeftPower) > 1) {
+        if(abs(backRightPower) > 1 || abs(backLeftPower) > 1 ||
+                abs(frontRightPower) > 1 || abs(frontLeftPower) > 1) {
 
             //sets normal speed to greatest magnitude of drive power level(to normalize all power)
-            nor = Math.max(Math.abs(frontLeftPower), Math.abs(backLeftPower));
-            nor = Math.max(Math.abs(frontRightPower), nor);
-            nor = Math.max(Math.abs(backRightPower), nor);
+            nor = Math.max(abs(frontLeftPower), abs(backLeftPower));
+            nor = Math.max(abs(frontRightPower), nor);
+            nor = Math.max(abs(backRightPower), nor);
 
         }
         intake(gp2);
@@ -213,21 +221,29 @@ public class FFRobot {
     public void linearPower(Gamepad gp){
          //(*-1 bc up is down rn)
         double pow = 0;
-//        if (gp.y) {
-//            linearUpStageX(stageThree);
-//        }
-//        else if (gp.b) {
-//            linearUpStageX(stageTwo);
-//        }
-//        else if (gp.a) {
-//            linearUpStageX(stageOne);
-//        }
+        currentState[0] = gp.y;
+        currentState[1] = gp.b;
+        currentState[2] = gp.x;
 
-        //Up - Power negative Encoder is negative
+        if (currentState[0] && !lastState[0]) {
+            slideBusy = true;
+            linearUpStageX(stageThree);
+        } else if (currentState[1] && !lastState[1]) {
+            slideBusy = true;
+            linearUpStageX(stageTwo);
+        } else if (currentState[2] && !lastState[2]) {
+            slideBusy = true;
+            linearUpStageX(stageOne);
+        }
+
+        for (int i = 0; i < 3; i++)
+            lastState[i] = currentState[i];
+
+        //Up - Power negative, since Encoder is negative1
         if (!slideBusy) {
-            if (linearSlide.getCurrentPosition() <= max && gp.left_stick_y < 0)//NEGATIVE IS UP
+            if (linearSlide.getCurrentPosition() >= max && gp.left_stick_y < 0)
                 pow = 0;
-            else if (linearSlide.getCurrentPosition() >= min && gp.left_stick_y > 0)//POS IS DOWN
+            else if (linearSlide.getCurrentPosition() <= min && gp.left_stick_y > 0)
                 pow = 0;
             else
                 pow = (gp.left_stick_y);
@@ -236,9 +252,25 @@ public class FFRobot {
             //DcMotor power is -1 - 1
         }
     }
+    public void linearUpStageX(int dis){
+        //we are at the right spot if:
+        if(getSlideEncoder() >= dis-50 && getSlideEncoder() <= dis+50){
+            setLinearPower(zero);
+            slideBusy = false;
+        }
+        else if(getSlideEncoder() > max)  //uh oh!
+            setLinearPower(0);
+        else if(getSlideEncoder() < min)  //uh oh*2!
+            setLinearPower(0);
+        else if(getSlideEncoder() < dis-100)
+            setLinearPower(-0.5); //go up!
+        else
+            setLinearPower(0.5);  //else, go down!
+    }
+
 
     public boolean isMax(){
-        if(linearSlide.getCurrentPosition() <= max){
+        if(getSlideEncoder() >= max){
             return true;
         }
         else{
@@ -250,7 +282,7 @@ public class FFRobot {
     }
 
     public boolean isMin(){
-        if(linearSlide.getCurrentPosition() >= min){
+        if(getSlideEncoder() <= min){
             return true;
         }
         else{
@@ -261,23 +293,9 @@ public class FFRobot {
         return min;
     }
 
-    public double getSlideEncoder(){
-        return linearSlide.getCurrentPosition();
+    public double getSlideEncoder(){    //because rn the "max" and "min" are too counterintuitive
+        return -1*linearSlide.getCurrentPosition();
     }
 
-    public void linearUpStageX(int dis){
-        linearSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        slideBusy = true;
-        linearSlide.setTargetPosition(dis);
-        if(getSlideEncoder() < dis)
-            setLinearPower(-0.5);
-        else
-            setLinearPower(0.5);
-        if(getSlideEncoder() >= dis-100 && getSlideEncoder() <= dis+100){
-            setLinearPower(zero);
-        }
-        linearSlide.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        slideBusy = false;
-    }
 
 }
