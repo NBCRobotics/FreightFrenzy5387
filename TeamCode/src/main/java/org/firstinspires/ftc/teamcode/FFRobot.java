@@ -28,8 +28,8 @@ public class FFRobot {
     private Servo arm = null;
 
     private int zero = 0;   //linear slide encoders
-    private int max = 6700;
-    private int min = 500;
+    private int max = 8500;
+    private int min = 1000;
 
     private boolean slideBusy = false;
     private boolean[] currentState = {false, false, false};
@@ -135,17 +135,24 @@ public class FFRobot {
 
         }
         intake(gp2);
-        linearPower(gp2);
+        //linearPower(gp2);
+        linearTest(gp2);
         armPower(gp2);
 
         carouselPower(gp);
-        int slowDown = gp.left_bumper ? 2 : 1;
-        this.flDrive.setPower(frontLeftPower/slowDown);
-        this.blDrive.setPower(backLeftPower/slowDown);
-        this.frDrive.setPower(frontRightPower/slowDown);
-        this.brDrive.setPower(backRightPower/slowDown);
-    }
 
+        this.flDrive.setPower((frontLeftPower)/(slowDown(gp)));
+        this.blDrive.setPower((backLeftPower)/(slowDown(gp)));
+        this.frDrive.setPower((frontRightPower)/(slowDown(gp)));
+        this.brDrive.setPower((backRightPower)/(slowDown(gp)));
+    }
+    public double slowDown(Gamepad gp){
+        if (gp.left_bumper){
+            return 4;
+        }
+        else
+            return 1;
+    }
     public double getFrontLeftPower(){
         return flDrive.getPower();
     }
@@ -266,6 +273,14 @@ public class FFRobot {
             setLinearPower(-0.5); //go up!
         else
             setLinearPower(0.5);  //else, go down!
+    }
+    public void linearTest(Gamepad gp){
+        if(isMax() && gp.left_stick_y < 0)
+            linearSlide.setPower(0);
+        else if (isMin() && gp.left_stick_y > 0)
+            linearSlide.setPower(0);
+        else
+            linearSlide.setPower(gp.left_stick_y);
     }
 
 
