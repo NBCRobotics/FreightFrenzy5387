@@ -29,8 +29,8 @@ public class FFTeleOp extends OpMode {
                 "\nBack Right: " + robot.getBackRightPower());
         telemetry.addData("Game Pad 1: ", gamepad1.left_stick_y + " " +gamepad1.left_stick_x+ " "
                 +gamepad1.right_stick_x+ " " +gamepad1.right_stick_y + "\n\n");
-        telemetry.addData("Right bumper: ", gamepad2.right_bumper);
-        telemetry.addData("Left bumper: ", gamepad2.left_bumper);
+        telemetry.addData("Right bumper GP1: ", gamepad1.right_bumper);
+        telemetry.addData("Left bumper GP1: ", gamepad1.left_bumper);
         telemetry.addData("Intake: ", robot.getIntakePower() + "\n");
         telemetry.addData("LinearSlide: ", +robot.getLinearPower() + "\n");
         telemetry.addData("LinearSlide Encoder: ", +robot.getSlideEncoder() + "\n");

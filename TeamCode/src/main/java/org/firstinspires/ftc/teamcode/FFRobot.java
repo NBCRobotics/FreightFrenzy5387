@@ -138,17 +138,17 @@ public class FFRobot {
         //linearPower(gp2);
         linearTest(gp2);
         armPower(gp2);
-
+        double slowDown = slowDown(gp);
         carouselPower(gp);
 
-        this.flDrive.setPower((frontLeftPower)/(slowDown(gp)));
-        this.blDrive.setPower((backLeftPower)/(slowDown(gp)));
-        this.frDrive.setPower((frontRightPower)/(slowDown(gp)));
-        this.brDrive.setPower((backRightPower)/(slowDown(gp)));
+        this.flDrive.setPower((frontLeftPower)/(slowDown));
+        this.blDrive.setPower((backLeftPower)/(slowDown));
+        this.frDrive.setPower((frontRightPower)/(slowDown));
+        this.brDrive.setPower((backRightPower)/(slowDown));
     }
     public double slowDown(Gamepad gp){
         if (gp.left_bumper){
-            return 4;
+            return 10;
         }
         else
             return 1;
