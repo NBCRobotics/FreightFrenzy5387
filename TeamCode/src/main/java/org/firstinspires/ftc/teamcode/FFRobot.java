@@ -28,8 +28,10 @@ public class FFRobot {
     private Servo arm = null;
 
     private int zero = 0;   //linear slide encoders
-    private int max = 8500;
-    private int min = 1000;
+    private final int MAX = 8500;
+    private final int MIN = 1000;
+    private int currentMax = 8500;
+    private int currentMin = 1000;
 
     private boolean slideBusy = false;
     private boolean[] currentState = {false, false, false};
@@ -139,6 +141,7 @@ public class FFRobot {
         linearTest(gp2);
         armPower(gp2);
         double slowDown = slowDown(gp);
+        //double slowDown = gp.left_bumper ? 10.0 : 1.0;
         carouselPower(gp);
 
         this.flDrive.setPower((frontLeftPower)/(slowDown));
@@ -148,10 +151,10 @@ public class FFRobot {
     }
     public double slowDown(Gamepad gp){
         if (gp.left_bumper){
-            return 10;
+            return 10.0;
         }
         else
-            return 1;
+            return 1.0;
     }
     public double getFrontLeftPower(){
         return flDrive.getPower();
@@ -227,30 +230,39 @@ public class FFRobot {
 
     public void linearPower(Gamepad gp){
          //(*-1 bc up is down rn)
+        if (gp.y)
+            currentMax = stageThree;
+        else if(gp.b)
+            currentMax = stageTwo;
+        else if (gp.a)
+            currentMax = stageOne;
+
+        currentMax = MAX;
+
         double pow = 0;
-        currentState[0] = gp.y;
-        currentState[1] = gp.b;
-        currentState[2] = gp.x;
+//        currentState[0] = gp.y;
+//        currentState[1] = gp.b;
+//        currentState[2] = gp.x;
+//
+//        if (currentState[0] && !lastState[0]) {
+//            slideBusy = true;
+//            linearUpStageX(stageThree);
+//        } else if (currentState[1] && !lastState[1]) {
+//            slideBusy = true;
+//            linearUpStageX(stageTwo);
+//        } else if (currentState[2] && !lastState[2]) {
+//            slideBusy = true;
+//            linearUpStageX(stageOne);
+//        }
 
-        if (currentState[0] && !lastState[0]) {
-            slideBusy = true;
-            linearUpStageX(stageThree);
-        } else if (currentState[1] && !lastState[1]) {
-            slideBusy = true;
-            linearUpStageX(stageTwo);
-        } else if (currentState[2] && !lastState[2]) {
-            slideBusy = true;
-            linearUpStageX(stageOne);
-        }
-
-        for (int i = 0; i < 3; i++)
-            lastState[i] = currentState[i];
+//        for (int i = 0; i < 3; i++)
+//            lastState[i] = currentState[i];
 
         //Up - Power negative, since Encoder is negative1
         if (!slideBusy) {
-            if (linearSlide.getCurrentPosition() >= max && gp.left_stick_y < 0)
+            if (linearSlide.getCurrentPosition() >= MAX && gp.left_stick_y < 0)
                 pow = 0;
-            else if (linearSlide.getCurrentPosition() <= min && gp.left_stick_y > 0)
+            else if (linearSlide.getCurrentPosition() <= MIN && gp.left_stick_y > 0)
                 pow = 0;
             else
                 pow = (gp.left_stick_y);
@@ -260,14 +272,12 @@ public class FFRobot {
         }
     }
     public void linearUpStageX(int dis){
-        //we are at the right spot if:
-        if(getSlideEncoder() >= dis-50 && getSlideEncoder() <= dis+50){
-            setLinearPower(zero);
-            slideBusy = false;
-        }
-        else if(getSlideEncoder() > max)  //uh oh!
+        //the new max will be set to "dis"
+        //
+        currentMax = dis;
+        if(getSlideEncoder() > currentMax)  //uh oh!
             setLinearPower(0);
-        else if(getSlideEncoder() < min)  //uh oh*2!
+        else if(getSlideEncoder() < MIN)  //uh oh*2!
             setLinearPower(0);
         else if(getSlideEncoder() < dis-100)
             setLinearPower(-0.5); //go up!
@@ -275,7 +285,17 @@ public class FFRobot {
             setLinearPower(0.5);  //else, go down!
     }
     public void linearTest(Gamepad gp){
-        if(isMax() && gp.left_stick_y < 0)
+        if (gp.y)
+            currentMax = stageThree;
+        else if(gp.b)
+            currentMax = stageTwo;
+        else if (gp.a)
+            currentMax = stageOne;
+        else{
+            currentMax = MAX;
+        }
+
+        if(getSlideEncoder() >= currentMax && gp.left_stick_y < 0)
             linearSlide.setPower(0);
         else if (isMin() && gp.left_stick_y > 0)
             linearSlide.setPower(0);
@@ -285,7 +305,7 @@ public class FFRobot {
 
 
     public boolean isMax(){
-        if(getSlideEncoder() >= max){
+        if(getSlideEncoder() >= MAX){
             return true;
         }
         else{
@@ -293,11 +313,11 @@ public class FFRobot {
         }
     }
     public int getMax(){
-        return max;
+        return MAX;
     }
 
     public boolean isMin(){
-        if(getSlideEncoder() <= min){
+        if(getSlideEncoder() <= MIN){
             return true;
         }
         else{
@@ -305,7 +325,7 @@ public class FFRobot {
         }
     }
     public int getMin(){
-        return min;
+        return MIN;
     }
 
     public double getSlideEncoder(){    //because rn the "max" and "min" are too counterintuitive
