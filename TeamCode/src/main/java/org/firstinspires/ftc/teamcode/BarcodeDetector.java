@@ -25,17 +25,12 @@ public class BarcodeDetector extends OpenCvPipeline {
     private Location location;
     static final Rect RIGHT_ROI = new Rect(new Point(0, 20), new Point(40, 60));
     static final Rect MIDDLE_ROI = new Rect(new Point(80, 20), new Point(120, 60));
-    static final Rect LEFT_ROI = new Rect(new Point(200, 20), new Point(240, 60)); //CHANGE THIS ONCE CAMERA IS MOUTNED!
-    /*
-    This is prob misplaced so i moved it to processFrame
-    Mat right = mat.submat(RIGHT_ROI);
-    Mat middle = mat.submat(MIDDLE_ROI);
-    Mat left = mat.submat(LEFT_ROI);
-    */
+    static final Rect LEFT_ROI = new Rect(new Point(200, 20), new Point(240, 60));
 
     //looks for team shipping element pos
     @Override
     public Mat processFrame(Mat input) {
+
         Imgproc.cvtColor(input, mat, Imgproc.COLOR_RGB2HSV);
         Scalar lowHSV = new Scalar(226, 43, 20);  //lowest value for blue
         Scalar highHSV = new Scalar(250, 255, 255); //highest value for blue (sorta not really actually at all)
@@ -49,6 +44,10 @@ public class BarcodeDetector extends OpenCvPipeline {
         double rightValue = Core.sumElems(right).val[0] / RIGHT_ROI.area() / 255;
         double middleValue = Core.sumElems(middle).val[0] / MIDDLE_ROI.area() / 255;
         double leftValue = Core.sumElems(left).val[0] / LEFT_ROI.area() / 255;        //how much of the area is the desired color
+
+        right.release();
+        middle.release();
+        left.release();
 
         boolean onRight = rightValue > 0.4; // is percent that it blue so 40%
         boolean onMiddle = middleValue > 0.4;
