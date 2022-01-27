@@ -10,8 +10,7 @@ import com.qualcomm.robotcore.util.Range;
 
 import java.lang.reflect.Field;
 
-//SHOULD GO TO HUB, PUT BLOCK ONTO THIRD STAGE, GO TO CAROUSEL, TURN IT, THEN PARK
-//I DON'T EXPECT IT TO WORK BUT I ALSO EXPECT RITHVIK TO BE ABLE TO FIND THE BUGS
+
 
 @Autonomous(name="FFAutoHubParkR", group="LinearOpMode")
 public class FFAutoHubParkR extends LinearOpMode {
@@ -29,30 +28,33 @@ public class FFAutoHubParkR extends LinearOpMode {
         waitForStart();
         runtime.reset();
 
+        robot.setArmPos(0.5);
         robot.drive(-0.5);
         doFor(100);
         robot.strafe(1);
         doFor(FieldMeasurements.TIME_FOR_TILE);
         robot.drive(-0.5);
         doFor(FieldMeasurements.TIME_FOR_TILE);
-        robot.linearUpStageX(FieldMeasurements.getStageThreeHeight());
-        robot.turnIntake(-0.5);
-        sleep(500);
+
+        robot.setLinearPower(-1);
+        sleep(2550);
+        robot.setLinearPower(0);
+        robot.turnIntake(1);
+        sleep(1000);
         robot.turnIntake(0);
-        robot.linearUpStageX(-50);
+
 
         robot.drive(0.5);
         doFor(FieldMeasurements.TIME_FOR_TILE);
-        robot.drive(-0.5, 0.5);
+        robot.drive(1, -1);
         doFor(FieldMeasurements.TIME_FOR_TILE);
 
         robot.drive(0.5); //going backwards now
-        doFor(FieldMeasurements.TIME_FOR_TILE);
+        doFor(2000);
         robot.setCarouselPower(0.7);
         sleep(1000);
         robot.strafe("left",0.5);
         doFor(FieldMeasurements.TIME_FOR_TILE);
-
 
     }
 
@@ -68,4 +70,6 @@ public class FFAutoHubParkR extends LinearOpMode {
     public void doFor() {
         this.doFor(1000);
     }
+
+
 }

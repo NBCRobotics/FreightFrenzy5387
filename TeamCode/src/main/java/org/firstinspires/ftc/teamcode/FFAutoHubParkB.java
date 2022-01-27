@@ -23,6 +23,36 @@ public class FFAutoHubParkB extends LinearOpMode {
         telemetry.update();
         robot.init(hardwareMap);
 
+        waitForStart();
+        runtime.reset();
+
+        robot.setArmPos(0.5);
+        robot.drive(-0.5);
+        doFor(100);
+        robot.strafe("left", 1);
+        doFor(FieldMeasurements.TIME_FOR_TILE);
+        robot.drive(-0.5);
+        doFor(FieldMeasurements.TIME_FOR_TILE);
+
+        robot.setLinearPower(-1);
+        sleep(2550);
+        robot.setLinearPower(0);
+        robot.turnIntake(1);
+        sleep(1000);
+        robot.turnIntake(0);
+
+        robot.drive(0.5);
+        doFor(FieldMeasurements.TIME_FOR_TILE);
+        robot.strafe("right", 1);
+        doFor(2200);
+
+        robot.setCarouselPower(-0.5);
+        sleep(6000);
+        robot.setCarouselPower(0);
+
+        robot.drive(-0.5);
+        doFor(1000);
+
 
     }
 

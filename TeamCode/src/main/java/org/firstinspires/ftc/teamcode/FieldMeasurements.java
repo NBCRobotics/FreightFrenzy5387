@@ -5,9 +5,9 @@ public class FieldMeasurements {
     public static final double TILE_WIDTH = 610; //3728.44037 in encoder ticks //2.15 per two tiles
     //1.0.75 for 1 tile  at speed 0.5
     public static final long TIME_FOR_TILE = 1075; //in MS
-    private static final int STAGEONE_HEIGHT = -3300;    //IN TICKS
-    private static final int STAGETWO_HEIGHT = -5300;   //IN TICKS
-    private static final int STAGETHREE_HEIGHT = -6700;
+    private static final int STAGEONE_HEIGHT = 3300;    //IN TICKS
+    private static final int STAGETWO_HEIGHT = 5300;   //IN TICKS
+    private static final int STAGETHREE_HEIGHT = 9000;
 
     public static int getStageOneHeight() {
         return STAGEONE_HEIGHT;

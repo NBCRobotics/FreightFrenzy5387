@@ -30,7 +30,6 @@ public class BarcodeDetector extends OpenCvPipeline {
     //looks for team shipping element pos
     @Override
     public Mat processFrame(Mat input) {
-
         Imgproc.cvtColor(input, mat, Imgproc.COLOR_RGB2HSV);
         Scalar lowHSV = new Scalar(226, 43, 20);  //lowest value for blue
         Scalar highHSV = new Scalar(250, 255, 255); //highest value for blue (sorta not really actually at all)

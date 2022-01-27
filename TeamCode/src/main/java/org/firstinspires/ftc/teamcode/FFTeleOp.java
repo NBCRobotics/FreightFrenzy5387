@@ -31,12 +31,16 @@ public class FFTeleOp extends OpMode {
                 +gamepad1.right_stick_x+ " " +gamepad1.right_stick_y + "\n\n");
         telemetry.addData("Right bumper GP1: ", gamepad1.right_bumper);
         telemetry.addData("Left bumper GP1: ", gamepad1.left_bumper);
+        telemetry.addData("GP2 a: ", gamepad2.a);
+        telemetry.addData("GP2 b: ", gamepad2.b);
+        telemetry.addData("GP2 y: ", gamepad2.y);
         telemetry.addData("Intake: ", robot.getIntakePower() + "\n");
         telemetry.addData("LinearSlide: ", +robot.getLinearPower() + "\n");
         telemetry.addData("LinearSlide Encoder: ", +robot.getSlideEncoder() + "\n");
         if (robot.isMax()) telemetry.addData("LINEAR SLIDE ERROR", "MAX REACHED");
         if (robot.isMin()) telemetry.addData("LINEAR SLIDE ERROR", "MIN REACHED");
         telemetry.addData("Carousel: ", robot.getCarouselPower() + "\n");
+        telemetry.addData("Current Max: ", robot.getCurrentMax());
         //above labels all motors, servos, etc.
         telemetry.update();
     }
