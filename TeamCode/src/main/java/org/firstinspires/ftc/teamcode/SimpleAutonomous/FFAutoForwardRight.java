@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.SimpleAutonomous;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
@@ -8,8 +8,10 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 
-@Autonomous(name="FFAutoBlueCarousel", group="LinearOpMode")
-public class FFAutoBlueCarousel extends LinearOpMode {
+import org.firstinspires.ftc.teamcode.FFRobot;
+
+@Autonomous(name="FFAutoForwardRight", group="LinearOpMode")
+public class FFAutoForwardRight extends LinearOpMode {
     FFRobot robot = new FFRobot();
 
     private ElapsedTime runtime = new ElapsedTime();
@@ -24,18 +26,14 @@ public class FFAutoBlueCarousel extends LinearOpMode {
         waitForStart();
         runtime.reset();
 
-        robot.drive(-0.5);
-        doFor(200);
 
-        robot.strafe(1);
-        doFor(FieldMeasurements.TIME_FOR_TILE);
+            robot.drive(-0.5);//f
+            doFor(1100);
+            robot.strafe(1);
+            doFor(1100);
 
-        robot.setCarouselPower(-0.5);
-        sleep(6000);
-        robot.setCarouselPower(0);
 
-        robot.drive(-0.5);
-        doFor(1000);
+
     }
 
     public void doFor(long ms) {

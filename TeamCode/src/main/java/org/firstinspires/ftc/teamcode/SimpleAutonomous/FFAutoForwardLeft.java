@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.SimpleAutonomous;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
@@ -8,8 +8,11 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 
-@Autonomous(name="FFAutoForwardRight", group="LinearOpMode")
-public class FFAutoForwardRight extends LinearOpMode {
+import org.firstinspires.ftc.teamcode.FFRobot;
+import org.firstinspires.ftc.teamcode.FieldMeasurements;
+
+@Autonomous(name="FFAutoForwardLeft", group="LinearOpMode")
+public class FFAutoForwardLeft extends LinearOpMode {
     FFRobot robot = new FFRobot();
 
     private ElapsedTime runtime = new ElapsedTime();
@@ -24,13 +27,11 @@ public class FFAutoForwardRight extends LinearOpMode {
         waitForStart();
         runtime.reset();
 
-
-            robot.drive(-0.5);//f
-            doFor(1100);
-            robot.strafe(1);
-            doFor(1100);
-
-
+        robot.drive(-0.5);
+        doFor(FieldMeasurements.TIME_FOR_TILE);
+        //
+        robot.strafe(-1);
+        doFor(FieldMeasurements.TIME_FOR_TILE);
 
     }
 

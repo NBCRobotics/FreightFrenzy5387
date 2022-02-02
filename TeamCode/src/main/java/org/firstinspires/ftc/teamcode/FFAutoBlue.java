@@ -16,7 +16,7 @@ import org.openftc.easyopencv.OpenCvInternalCamera;
 //Made by Andrew Hu
 
 @Autonomous(name="FFAutoBlue", group="LinearOpMode")
-@Disabled
+//@Disabled
 //RED
 public class FFAutoBlue extends LinearOpMode {
     FFRobot robot = new FFRobot();

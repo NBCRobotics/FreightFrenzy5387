@@ -25,7 +25,6 @@ import org.openftc.easyopencv.OpenCvWebcam;
 //RED
     public class FFAutoRed extends LinearOpMode {
     FFRobot robot = new FFRobot();
-    // Declare OpMode members.
     private ElapsedTime runtime = new ElapsedTime();
 
     final int MAXSLIDEHEIGHT = robot.getMax();
@@ -48,23 +47,6 @@ import org.openftc.easyopencv.OpenCvWebcam;
         telemetry.update();
         robot.init(hardwareMap);
 
-//        int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
-//        cam = OpenCvCameraFactory.getInstance().createWebcam(hardwareMap.get(WebcamName.class, "Webcam 1"), cameraMonitorViewId);
-//
-//
-//        BarcodeDetector detector = new BarcodeDetector(telemetry); //barcode
-//        cam.setPipeline(detector);
-//        cam.setMillisecondsPermissionTimeout(2500);
-//        cam.openCameraDeviceAsync(new OpenCvCamera.AsyncCameraOpenListener() {
-//            @Override
-//            public void onOpened() {
-//                cam.startStreaming(640, 480, OpenCvCameraRotation.UPRIGHT);
-//            }
-//            @Override
-//            public void onError(int errorCode) {
-//                telemetry.addData("Error: ", "Webcam could be opened" + errorCode);
-//            }
-//        });
 
         int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
         cam = OpenCvCameraFactory.getInstance().createInternalCamera(OpenCvInternalCamera.CameraDirection.BACK, cameraMonitorViewId);

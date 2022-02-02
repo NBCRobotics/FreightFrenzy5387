@@ -16,6 +16,9 @@ public class BarcodeDetector extends OpenCvPipeline {
     public BarcodeDetector (Telemetry t) {
         telemetry = t;
     }
+
+    Scalar colorNotFound = new Scalar(255, 0, 0);
+    Scalar colorFound = new Scalar(0, 255, 0);
     public enum Location {
         RIGHT, //stage one
         MIDDLE, //stage two
@@ -23,16 +26,19 @@ public class BarcodeDetector extends OpenCvPipeline {
         UNKNOWN
     }
     private Location location;
-    static final Rect RIGHT_ROI = new Rect(new Point(0, 20), new Point(40, 60));
-    static final Rect MIDDLE_ROI = new Rect(new Point(80, 20), new Point(120, 60));
-    static final Rect LEFT_ROI = new Rect(new Point(200, 20), new Point(240, 60));
+    static final Rect RIGHT_ROI = new Rect(new Point(240, 140), new Point(280, 180));
+    static final Rect MIDDLE_ROI = new Rect(new Point(140, 140), new Point(180, 180));
+    static final Rect LEFT_ROI = new Rect(new Point(40, 140), new Point(80, 180));
 
     //looks for team shipping element pos
     @Override
     public Mat processFrame(Mat input) {
         Imgproc.cvtColor(input, mat, Imgproc.COLOR_RGB2HSV);
-        Scalar lowHSV = new Scalar(226, 43, 20);  //lowest value for blue
-        Scalar highHSV = new Scalar(250, 255, 255); //highest value for blue (sorta not really actually at all)
+//        Scalar lowHSV = new Scalar(226, 43, 20);  //lowest value for blue
+//        Scalar highHSV = new Scalar(250, 255, 255); //highest value for blue (sorta not really actually at all)
+
+        Scalar lowHSV = new Scalar(90, 150, 0);
+        Scalar highHSV = new Scalar(140, 255, 255);
 
         Core.inRange(mat, lowHSV, highHSV, mat);
 
@@ -68,10 +74,19 @@ public class BarcodeDetector extends OpenCvPipeline {
         telemetry.update();
         Imgproc.cvtColor(mat, mat, Imgproc.COLOR_GRAY2RGB);
 
+        //add rectangles
+        Imgproc.rectangle(mat, RIGHT_ROI, onRight ? colorFound : colorNotFound);
+        Imgproc.rectangle(mat, MIDDLE_ROI, onMiddle ? colorFound : colorNotFound);
+        Imgproc.rectangle(mat, LEFT_ROI, onLeft ? colorFound : colorNotFound);
+
         return mat;
     }
 
     public Location getLocation() {
         return location;
+    }
+
+    private void checkForBarcode() {
+
     }
 }
