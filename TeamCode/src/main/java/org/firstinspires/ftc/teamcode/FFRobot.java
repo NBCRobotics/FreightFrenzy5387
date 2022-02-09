@@ -32,6 +32,7 @@ public class FFRobot {
     private final int MIN = 1800;
     private int currentMax = MAX;
     private int currentMin = MIN;
+    private int initPos;
 
     private int stageTwo = FieldMeasurements.getStageTwoHeight();
     private int stageOne = FieldMeasurements.getStageOneHeight();
@@ -63,18 +64,24 @@ public class FFRobot {
         this.frDrive.setDirection(motR);
         this.linearSlide.setDirection(motR);
         this.arm.setDirection(serR);
-        this.blDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        this.brDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        this.linearSlide.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         this.linearSlide.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
     }
 
+    public void setDriveMode(DcMotor.RunMode mode) {
+        this.blDrive.setMode(mode);
+        this.brDrive.setMode(mode);
+        this.flDrive.setMode(mode);
+        this.frDrive.setMode(mode);
+    }
+
     public void leftPow(double pow){
-        this.blDrive.setPower(pow);
-        this.brDrive.setPower(pow);
+        this.blDrive.setPower(-pow);
+        this.flDrive.setPower(-pow);
     }
     public void rightPow(double pow){
-        this.flDrive.setPower(pow);
-        this.frDrive.setPower(pow);
+        this.brDrive.setPower(-pow);
+        this.blDrive.setPower(-pow);
     }
     public void drive(double lPow, double rPow){
         this.leftPow(lPow);
@@ -83,6 +90,19 @@ public class FFRobot {
 
     public void drive(double bothPow){ //override of drive(double, double)
         this.drive(bothPow,bothPow);
+    }
+
+    public void driveTo(int pos) {
+        setDriveMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        setDriveMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        setDriveMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        while (flDrive.getCurrentPosition() < pos) {
+            flDrive.setTargetPosition(pos);
+            frDrive.setTargetPosition(pos);
+            blDrive.setTargetPosition(pos);
+            brDrive.setTargetPosition(pos);
+        }
+        setDriveMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
     }
 
     public void strafe(double pow){ //Pos = Right , Neg = Left
@@ -102,7 +122,7 @@ public class FFRobot {
 
     public void mechanumPov(Gamepad gp, Gamepad gp2){
         double drive = (double) (gp.left_stick_y);
-        double turn = (double) ((gp.left_stick_x) * -1);
+        double turn = (double) ((gp.left_stick_x) * -1.5);
         double strafe = (double) ((gp.right_stick_x) * -1);
 
         double nor = 0.0; //normal drive power
@@ -274,7 +294,7 @@ public class FFRobot {
         return MIN;
     }
 
-    public double getSlideEncoder(){    //because rn the "max" and "min" are too counterintuitive
+    public int getSlideEncoder(){    //because rn the "max" and "min" are too counterintuitive
         return -1*linearSlide.getCurrentPosition();
     }
 

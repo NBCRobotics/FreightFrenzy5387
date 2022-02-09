@@ -43,8 +43,6 @@ import org.openftc.easyopencv.OpenCvWebcam;
     //OpenCvWebcam cam;
     @Override
     public void runOpMode() {
-        telemetry.addData("Status", "Initialized");
-        telemetry.update();
         robot.init(hardwareMap);
 
 
@@ -86,14 +84,11 @@ import org.openftc.easyopencv.OpenCvWebcam;
                 break;
         }
 
-
-        //raiseAndDrop(setStage, 0.5);
-
-
-
-        telemetry.addData("Status: ", "Autonomous Terminalized");
+        telemetry.addData("Status: ", "Autonomous Initialized");
         telemetry.addData("Status: ", "Stage is set to" + stage);
         telemetry.update();
+
+
     }
 
     public void doFor(long ms)
