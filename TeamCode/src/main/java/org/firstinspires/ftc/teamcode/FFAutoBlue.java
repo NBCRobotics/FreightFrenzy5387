@@ -53,7 +53,7 @@ public class FFAutoBlue extends LinearOpMode {
         cam.openCameraDeviceAsync(new OpenCvCamera.AsyncCameraOpenListener() {
             @Override
             public void onOpened() {
-                cam.startStreaming(1280, 720, OpenCvCameraRotation.UPRIGHT);
+                cam.startStreaming(320, 240, OpenCvCameraRotation.UPSIDE_DOWN);
             }
             @Override
             public void onError(int errorCode) {

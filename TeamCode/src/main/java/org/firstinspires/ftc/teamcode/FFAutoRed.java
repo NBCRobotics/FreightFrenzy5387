@@ -54,7 +54,7 @@ import org.openftc.easyopencv.OpenCvWebcam;
         cam.openCameraDeviceAsync(new OpenCvCamera.AsyncCameraOpenListener() {
             @Override
             public void onOpened() {
-                cam.startStreaming(320, 240, OpenCvCameraRotation.SIDEWAYS_RIGHT);
+                cam.startStreaming(320, 240, OpenCvCameraRotation.UPSIDE_DOWN);
             }
 
             @Override

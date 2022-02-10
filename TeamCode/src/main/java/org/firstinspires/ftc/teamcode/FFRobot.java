@@ -149,9 +149,9 @@ public class FFRobot {
 //        }
 
 
-        drive = (double) (-gp.left_stick_y);
-        strafe = (double) (-gp.left_stick_x);
-        turn = (double) (-gp.right_stick_x);
+        drive = (-gp.left_stick_y);
+        strafe = (gp.left_stick_x);
+        turn = (gp.right_stick_x);
 
         //drive measures forward and backwards - is unchanged for all motors
         //strafe is subtracted from the front right and the back left
@@ -212,10 +212,6 @@ public class FFRobot {
 
     public void turnIntake(double pow){
         intake.setPower(pow);
-    }
-
-    public void turnIntake(){
-        this.turnIntake(1);
     }
 
     public void brake(){
@@ -291,24 +287,14 @@ public class FFRobot {
 
 
     public boolean isMax(){
-        if(getSlideEncoder() >= MAX){
-            return true;
-        }
-        else{
-            return false;
-        }
+        return getSlideEncoder() >= MAX;
     }
     public int getMax(){
         return MAX;
     }
 
     public boolean isMin(){
-        if(getSlideEncoder() <= MIN){
-            return true;
-        }
-        else{
-            return false;
-        }
+        return getSlideEncoder() <= MIN;
     }
     public int getMin(){
         return MIN;
