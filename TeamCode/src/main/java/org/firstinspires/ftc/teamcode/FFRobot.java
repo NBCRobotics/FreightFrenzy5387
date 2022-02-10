@@ -43,7 +43,13 @@ public class FFRobot {
     Servo.Direction serR = Servo.Direction.REVERSE;
     Servo.Direction serF = Servo.Direction.FORWARD;
 
-
+    private double drive;
+    private double turn;
+    private double strafe;
+    private double frontLeftPower;
+    private double frontRightPower;
+    private double backLeftPower;
+    private double backRightPower;
 
     public void init(HardwareMap hwdMap){
 
@@ -121,47 +127,56 @@ public class FFRobot {
     }
 
     public void mechanumPov(Gamepad gp, Gamepad gp2){
-        double drive = (double) (gp.left_stick_y);
-        double turn = (double) ((gp.left_stick_x) * -1.5);
-        double strafe = (double) ((gp.right_stick_x) * -1);
+//        double drive = (double) (gp.left_stick_y);
+//        double turn = (double) ((gp.left_stick_x) * -1.5);
+//        double strafe = (double) ((gp.right_stick_x) * -1);
+//
+//        double nor = 0.0; //normal drive power
+//
+//        double frontLeftPower = (drive + turn + strafe);
+//        double backLeftPower = (drive - turn + strafe);
+//        double frontRightPower = (drive - turn - strafe);
+//        double backRightPower = (drive + turn - strafe);
+//
 
-        double nor = 0.0; //normal drive power
+//        if(abs(backRightPower) > 1 || abs(backLeftPower) > 1 ||
+//                abs(frontRightPower) > 1 || abs(frontLeftPower) > 1) {
+//
+//            //sets normal speed to greatest magnitude of drive power level(to normalize all power)
+//            nor = Math.max(abs(frontLeftPower), abs(backLeftPower));
+//            nor = Math.max(abs(frontRightPower), nor);
+//            nor = Math.max(abs(backRightPower), nor);
+//        }
 
-        double frontLeftPower = (drive + turn + strafe);
-        double backLeftPower = (drive - turn + strafe);
-        double frontRightPower = (drive - turn - strafe);
-        double backRightPower = (drive + turn - strafe);
 
-        double y = gp.left_stick_y; // Remember, this is reversed!
-        double x = -gp.left_stick_x * 1.1;
-        double rx = -gp.right_stick_x;
-        //double deno = Math.max(Math.abs(y) + Math.abs(x) + Math.abs(rx), 1); //denominator
+        drive = (double) (-gp.left_stick_y);
+        strafe = (double) (-gp.left_stick_x);
+        turn = (double) (-gp.right_stick_x);
 
-        double newflPower = y + x + rx;
-        double newblPower = y - x + rx;
-        double newfrPower = y - x - rx;
-        double newbrPower = y + x - rx;
+        //drive measures forward and backwards - is unchanged for all motors
+        //strafe is subtracted from the front right and the back left
+        //turn needs to affect the right if the stick is moved right, left if moved left
+        //right stick right is positive
+        //so subtract turn from the right, and add to left
 
-        if(abs(backRightPower) > 1 || abs(backLeftPower) > 1 ||
-                abs(frontRightPower) > 1 || abs(frontLeftPower) > 1) {
+        frontLeftPower = (drive + strafe + turn);
+        frontRightPower = (drive - strafe - turn);
+        backLeftPower = (drive - strafe + turn);
+        backRightPower = (drive + strafe - turn);
 
-            //sets normal speed to greatest magnitude of drive power level(to normalize all power)
-            nor = Math.max(abs(frontLeftPower), abs(backLeftPower));
-            nor = Math.max(abs(frontRightPower), nor);
-            nor = Math.max(abs(backRightPower), nor);
-
-        }
-        intake(gp2);
-        linearPower(gp2);
-        armPower(gp2);
-        carouselPower(gp);
-
+        //to slow down the drive if needed
         double slowDown = gp.left_bumper ? 8.0 : 1.0;
 
         this.flDrive.setPower((frontLeftPower)/(slowDown));
         this.blDrive.setPower((backLeftPower)/(slowDown));
         this.frDrive.setPower((frontRightPower)/(slowDown));
         this.brDrive.setPower((backRightPower)/(slowDown));
+
+        intake(gp2);
+        linearPower(gp2);
+        armPower(gp2);
+        carouselPower(gp);
+        dpadDrive(gp);
     }
 
     public double getFrontLeftPower(){
@@ -189,7 +204,7 @@ public class FFRobot {
         linearSlide.setPower(pow);
     }
 
-    public void setLinearPower(String direction, double pow) {
+    public void setLinearPower(String direction, double pow) { //what is this
         if (direction.equals("up)")) {
             linearSlide.setPower(-pow);
         }
@@ -210,7 +225,7 @@ public class FFRobot {
    public void setArmPos(double pow) { arm.setPosition(pow); }
 
     //Gamepad 1 Methods
-    public void carouselPower(Gamepad gp){ //Blue - Left Trigger || Red - Right Trigger
+    public void carouselPower(Gamepad gp) { //Blue - Left Trigger || Red - Right Trigger
         if(gp.right_trigger > 0)
             carousel.setPower(-(gp.right_trigger)/2);
         else if(gp.left_trigger > 0)
@@ -219,16 +234,34 @@ public class FFRobot {
             carousel.setPower(zero);
     }
 
+    public void dpadDrive(Gamepad gp) {    //use if you simple want to move straight in cardinal directions.
+        if (gp.dpad_down) {
+            drive(-0.5);
+        } else if (gp.dpad_left) {
+            strafe("left", 0.5);
+        } else if (gp.dpad_right) {
+            strafe("right", 0.5);
+        } else if (gp.dpad_up) {
+            drive(0.5);
+        } else {
+            brake();
+        }
+
+        //if that doesn't work uncomment this stuff cause i think this might work
+//        drive = gp.dpad_up ? -1.0 : gp.dpad_down ? 1.0 : 0.0;
+//        strafe = gp.dpad_left ? -1.0 : gp.dpad_right ? 1.0 : 0.0;
+    }
+
 
     //GamePad 2 Methods
-    public void intake(Gamepad gp) { //neg is push out
+    public void intake(Gamepad gp) { //negative is push out || positive is take in
         if (gp.right_stick_y != 0)
             intake.setPower(gp.right_stick_y);
         else
             intake.setPower(0);
     }
 
-    public void armPower(Gamepad gp){
+    public void armPower(Gamepad gp) { //right is raise || left is lower
         if (gp.right_bumper)
             arm.setPosition(0.45);
         else if (gp.left_bumper)
@@ -237,20 +270,7 @@ public class FFRobot {
             arm.setPosition(0.5);
     }
 
-    public void linearUpStageX(int dis){
-        //the new max will be set to "dis"
-        //
-        currentMax = dis;
-        if(getSlideEncoder() > currentMax)  //uh oh!
-            setLinearPower(0);
-        else if(getSlideEncoder() < MIN)  //uh oh*2!
-            setLinearPower(0);
-        else if(getSlideEncoder() < dis-100)
-            setLinearPower(-0.5); //go up!
-        else
-            setLinearPower(0.5);  //else, go down!
-    }
-    public void linearPower(Gamepad gp){
+    public void linearPower(Gamepad gp){ //dynamically will set a "max" - stage one, two or three, or above all stages
         if (gp.y)
             currentMax = stageThree;
         else if(gp.b)
@@ -294,7 +314,7 @@ public class FFRobot {
         return MIN;
     }
 
-    public int getSlideEncoder(){    //because rn the "max" and "min" are too counterintuitive
+    public int getSlideEncoder(){    //the "max" and "min" are too counterintuitive
         return -1*linearSlide.getCurrentPosition();
     }
 
