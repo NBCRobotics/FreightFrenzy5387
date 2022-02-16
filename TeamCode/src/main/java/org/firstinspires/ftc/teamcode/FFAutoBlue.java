@@ -1,13 +1,10 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
-import com.qualcomm.robotcore.util.Range;
 
+import org.firstinspires.ftc.teamcode.OpenCV.BarcodeDetector;
 import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraFactory;
 import org.openftc.easyopencv.OpenCvCameraRotation;
@@ -82,67 +79,67 @@ public class FFAutoBlue extends LinearOpMode {
         return level;
     }
 
-    public void raiseAndDrop(int level, double pow) //using the encoder for dropping freight onto the tower
-    {
-        double currentHeight = robot.getSlideEncoder(); //assuming it starts at ground level
-        double targetHeight = 0; //where the linear slide wants to go
-        switch(level) {
-            case 1:
-                targetHeight = MAXSLIDEHEIGHT / 5.0;
-                while (currentHeight > targetHeight) {
-                    robot.setLinearPower(-pow);
-                    currentHeight = robot.getSlideEncoder();
-                }
-                robot.setLinearPower(0);
-                sleep(500);
-                robot.turnIntake(-1);
-                sleep(500);
-                robot.turnIntake(0);
-                while (currentHeight < MINSLIDEHEIGHT)   //we dont want it to break obv
-                {
-                    robot.setLinearPower(pow);
-                    currentHeight = robot.getSlideEncoder();
-                }
-                robot.setLinearPower(0);
-                break;
-            case 2:
-                targetHeight = MAXSLIDEHEIGHT / 2.0;
-                while (currentHeight > targetHeight) {
-                    robot.setLinearPower(-pow);
-                    currentHeight = robot.getSlideEncoder();
-                }
-                robot.setLinearPower(0);
-                sleep(500);
-                robot.turnIntake(-1);
-                sleep(500);
-                robot.turnIntake(0);
-                while (currentHeight < MINSLIDEHEIGHT)
-                {
-                    robot.setLinearPower(pow);
-                    currentHeight = robot.getSlideEncoder();
-                }
-                robot.setLinearPower(0);
-                break;
-            case 3:
-                targetHeight = MAXSLIDEHEIGHT;
-                while (currentHeight > targetHeight) {
-                    robot.setLinearPower(-pow);     //negative is up
-                    currentHeight = robot.getSlideEncoder();
-                }
-                robot.setLinearPower(0);
-                sleep(500);
-                robot.turnIntake(-1);
-                sleep(500);
-                robot.turnIntake(0);
-                while (currentHeight < MINSLIDEHEIGHT)
-                {
-                    robot.setLinearPower(pow);
-                    currentHeight = robot.getSlideEncoder();
-                }
-                robot.setLinearPower(0);
-                break;
-        }
-
-
-    }
+//    public void raiseAndDrop(int level, double pow) //using the encoder for dropping freight onto the tower
+//    {
+//        double currentHeight = robot.getSlideEncoder(); //assuming it starts at ground level
+//        double targetHeight = 0; //where the linear slide wants to go
+//        switch(level) {
+//            case 1:
+//                targetHeight = MAXSLIDEHEIGHT / 5.0;
+//                while (currentHeight > targetHeight) {
+//                    robot.setLinearPower(-pow);
+//                    currentHeight = robot.getSlideEncoder();
+//                }
+//                robot.setLinearPower(0);
+//                sleep(500);
+//                robot.turnIntake(-1);
+//                sleep(500);
+//                robot.turnIntake(0);
+//                while (currentHeight < MINSLIDEHEIGHT)   //we dont want it to break obv
+//                {
+//                    robot.setLinearPower(pow);
+//                    currentHeight = robot.getSlideEncoder();
+//                }
+//                robot.setLinearPower(0);
+//                break;
+//            case 2:
+//                targetHeight = MAXSLIDEHEIGHT / 2.0;
+//                while (currentHeight > targetHeight) {
+//                    robot.setLinearPower(-pow);
+//                    currentHeight = robot.getSlideEncoder();
+//                }
+//                robot.setLinearPower(0);
+//                sleep(500);
+//                robot.turnIntake(-1);
+//                sleep(500);
+//                robot.turnIntake(0);
+//                while (currentHeight < MINSLIDEHEIGHT)
+//                {
+//                    robot.setLinearPower(pow);
+//                    currentHeight = robot.getSlideEncoder();
+//                }
+//                robot.setLinearPower(0);
+//                break;
+//            case 3:
+//                targetHeight = MAXSLIDEHEIGHT;
+//                while (currentHeight > targetHeight) {
+//                    robot.setLinearPower(-pow);     //negative is up
+//                    currentHeight = robot.getSlideEncoder();
+//                }
+//                robot.setLinearPower(0);
+//                sleep(500);
+//                robot.turnIntake(-1);
+//                sleep(500);
+//                robot.turnIntake(0);
+//                while (currentHeight < MINSLIDEHEIGHT)
+//                {
+//                    robot.setLinearPower(pow);
+//                    currentHeight = robot.getSlideEncoder();
+//                }
+//                robot.setLinearPower(0);
+//                break;
+//        }
+//
+//
+//    }
 }

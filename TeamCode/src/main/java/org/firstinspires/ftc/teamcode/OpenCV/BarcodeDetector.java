@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.OpenCV;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.opencv.core.Core;
@@ -11,14 +11,14 @@ import org.openftc.easyopencv.OpenCvPipeline;
 
 
 public class BarcodeDetector extends OpenCvPipeline {
-    Telemetry telemetry;
-    Mat mat = new Mat();
+    private Telemetry telemetry;
+    private Mat mat = new Mat();
     public BarcodeDetector (Telemetry t) {
         telemetry = t;
     }
 
-    Scalar colorNotFound = new Scalar(255, 0, 0);
-    Scalar colorFound = new Scalar(0, 255, 0);
+    private Scalar colorNotFound = new Scalar(255, 0, 0);
+    private Scalar colorFound = new Scalar(0, 255, 0);
     public enum Location {
         RIGHT, //stage one
         MIDDLE, //stage two
@@ -86,7 +86,4 @@ public class BarcodeDetector extends OpenCvPipeline {
         return location;
     }
 
-    private void checkForBarcode() {
-
-    }
 }

@@ -1,22 +1,14 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
-import com.qualcomm.robotcore.util.Range;
 
-import org.firstinspires.ftc.robotcore.external.Telemetry;
-import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
+import org.firstinspires.ftc.teamcode.OpenCV.BarcodeDetector;
 import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraFactory;
 import org.openftc.easyopencv.OpenCvCameraRotation;
 import org.openftc.easyopencv.OpenCvInternalCamera;
-import org.openftc.easyopencv.OpenCvPipeline;
-import org.openftc.easyopencv.OpenCvViewport;
-import org.openftc.easyopencv.OpenCvWebcam;
 
 //Made by Andrew Hu
 
@@ -65,7 +57,6 @@ import org.openftc.easyopencv.OpenCvWebcam;
 
 
 
-
         waitForStart();
         runtime.reset();
 
@@ -88,7 +79,6 @@ import org.openftc.easyopencv.OpenCvWebcam;
         telemetry.addData("Status: ", "Stage is set to" + stage);
         telemetry.update();
 
-
     }
 
     public void doFor(long ms)
@@ -107,68 +97,68 @@ import org.openftc.easyopencv.OpenCvWebcam;
 
     }
 
-    public void raiseAndDrop(int stage, double pow)
-    {
-        double currentHeight = robot.getSlideEncoder(); //assuming it starts at ground level remember neg is up
-        double targetHeight = 0; //where the linear slide wants to go
-
-        switch(stage) {
-            case 1:
-                targetHeight = MAXSLIDEHEIGHT / 5.0;
-                while (currentHeight > targetHeight) {
-                    robot.setLinearPower(-pow);
-                    currentHeight = robot.getSlideEncoder();
-                }
-                robot.setLinearPower(0);
-                sleep(500);
-                robot.turnIntake(-1);
-                sleep(500);
-                robot.turnIntake(0);
-                while (currentHeight < MINSLIDEHEIGHT)
-                {
-                    robot.setLinearPower(pow);
-                    currentHeight = robot.getSlideEncoder();
-                }
-                robot.setLinearPower(0);
-                break;
-            case 2:
-                targetHeight = MAXSLIDEHEIGHT / 2.0;
-                while (currentHeight > targetHeight) {
-                    robot.setLinearPower(-pow);
-                    currentHeight = robot.getSlideEncoder();
-                }
-                robot.setLinearPower(0);
-                sleep(500);
-                robot.turnIntake(-1);
-                sleep(500);
-                robot.turnIntake(0);
-                while (currentHeight < MINSLIDEHEIGHT)
-                {
-                    robot.setLinearPower(pow);
-                    currentHeight = robot.getSlideEncoder();
-                }
-                robot.setLinearPower(0);
-                break;
-            case 3:
-                targetHeight = MAXSLIDEHEIGHT;
-                while (currentHeight > targetHeight) {
-                    robot.setLinearPower(pow);
-                    currentHeight = robot.getSlideEncoder();
-                }
-                robot.setLinearPower(0);
-                sleep(500);
-                robot.turnIntake(-1);
-                sleep(500);
-                robot.turnIntake(0);
-                while (currentHeight < MINSLIDEHEIGHT)
-                {
-                    robot.setLinearPower(-pow);
-                    currentHeight = robot.getSlideEncoder();
-                }
-                robot.setLinearPower(0);
-                break;
-        }
-
-
-    }
+//    public void raiseAndDrop(int stage, double pow)
+//    {
+//        double currentHeight = robot.getSlideEncoder(); //assuming it starts at ground level remember neg is up
+//        double targetHeight = 0; //where the linear slide wants to go
+//
+//        switch(stage) {
+//            case 1:
+//                targetHeight = MAXSLIDEHEIGHT / 5.0;
+//                while (currentHeight > targetHeight) {
+//                    robot.setLinearPower(-pow);
+//                    currentHeight = robot.getSlideEncoder();
+//                }
+//                robot.setLinearPower(0);
+//                sleep(500);
+//                robot.turnIntake(-1);
+//                sleep(500);
+//                robot.turnIntake(0);
+//                while (currentHeight < MINSLIDEHEIGHT)
+//                {
+//                    robot.setLinearPower(pow);
+//                    currentHeight = robot.getSlideEncoder();
+//                }
+//                robot.setLinearPower(0);
+//                break;
+//            case 2:
+//                targetHeight = MAXSLIDEHEIGHT / 2.0;
+//                while (currentHeight > targetHeight) {
+//                    robot.setLinearPower(-pow);
+//                    currentHeight = robot.getSlideEncoder();
+//                }
+//                robot.setLinearPower(0);
+//                sleep(500);
+//                robot.turnIntake(-1);
+//                sleep(500);
+//                robot.turnIntake(0);
+//                while (currentHeight < MINSLIDEHEIGHT)
+//                {
+//                    robot.setLinearPower(pow);
+//                    currentHeight = robot.getSlideEncoder();
+//                }
+//                robot.setLinearPower(0);
+//                break;
+//            case 3:
+//                targetHeight = MAXSLIDEHEIGHT;
+//                while (currentHeight > targetHeight) {
+//                    robot.setLinearPower(pow);
+//                    currentHeight = robot.getSlideEncoder();
+//                }
+//                robot.setLinearPower(0);
+//                sleep(500);
+//                robot.turnIntake(-1);
+//                sleep(500);
+//                robot.turnIntake(0);
+//                while (currentHeight < MINSLIDEHEIGHT)
+//                {
+//                    robot.setLinearPower(-pow);
+//                    currentHeight = robot.getSlideEncoder();
+//                }
+//                robot.setLinearPower(0);
+//                break;
+//        }
+//
+//
+//    }
 }

@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.SimpleAutonomous;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
@@ -8,12 +8,14 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 
+import org.firstinspires.ftc.teamcode.FFRobot;
+import org.firstinspires.ftc.teamcode.FieldMeasurements;
+
 import java.lang.reflect.Field;
 
-
-
-@Autonomous(name="FFAutoHubParkR", group="LinearOpMode")
-public class FFAutoHubParkR extends LinearOpMode {
+//DIDNT FINISH OOPS MY BAD
+@Autonomous(name="FFAutoHubParkB", group="LinearOpMode")
+public class FFAutoHubParkB extends LinearOpMode {
     FFRobot robot = new FFRobot();
 
     private ElapsedTime runtime = new ElapsedTime();
@@ -24,14 +26,13 @@ public class FFAutoHubParkR extends LinearOpMode {
         telemetry.update();
         robot.init(hardwareMap);
 
-
         waitForStart();
         runtime.reset();
 
         robot.setArmPos(0.5);
         robot.drive(-0.5);
         doFor(100);
-        robot.strafe(1);
+        robot.strafe("left", 1);
         doFor(FieldMeasurements.TIME_FOR_TILE);
         robot.drive(-0.5);
         doFor(FieldMeasurements.TIME_FOR_TILE);
@@ -43,18 +44,18 @@ public class FFAutoHubParkR extends LinearOpMode {
         sleep(1000);
         robot.turnIntake(0);
 
-
         robot.drive(0.5);
         doFor(FieldMeasurements.TIME_FOR_TILE);
-        robot.drive(1, -1);
-        doFor(FieldMeasurements.TIME_FOR_TILE);
+        robot.strafe("right", 1);
+        doFor(2200);
 
-        robot.drive(0.5); //going backwards now
-        doFor(2000);
-        robot.setCarouselPower(0.7);
-        sleep(1000);
-        robot.strafe("left",0.5);
-        doFor(FieldMeasurements.TIME_FOR_TILE);
+        robot.setCarouselPower(-0.5);
+        sleep(6000);
+        robot.setCarouselPower(0);
+
+        robot.drive(-0.5);
+        doFor(1000);
+
 
     }
 
@@ -70,6 +71,4 @@ public class FFAutoHubParkR extends LinearOpMode {
     public void doFor() {
         this.doFor(1000);
     }
-
-
 }

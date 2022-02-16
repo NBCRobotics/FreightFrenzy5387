@@ -29,7 +29,7 @@ public class FFRobot {
 
     private int zero = 0;   //linear slide encoders
     private final int MAX = 9500;
-    private final int MIN = 1800;
+    private final int MIN = 0;
     private int currentMax = MAX;
     private int currentMin = MIN;
     private int initPos;
@@ -109,6 +109,10 @@ public class FFRobot {
             brDrive.setTargetPosition(pos);
         }
         setDriveMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+    }
+
+    public void turn() {
+
     }
 
     public void strafe(double pow){ //Pos = Right , Neg = Left
@@ -201,12 +205,16 @@ public class FFRobot {
 
     public void setLinearPower(double pow)
     {
-        linearSlide.setPower(pow);
+        linearSlide.setPower(-pow); //the motor is orientated as up is negative - this makes it more intuitive with our min and max values
     }
 
     public void setLinearPower(String direction, double pow) { //what is this
-        if (direction.equals("up)")) {
+        pow = abs(pow);
+        if (direction.equals("up")) {
             linearSlide.setPower(-pow);
+        }
+        if (direction.equals("down")) {
+            linearSlide.setPower(pow);
         }
     }
 
@@ -218,7 +226,7 @@ public class FFRobot {
         this.drive(0.0);
     }
 
-   public void setArmPos(double pow) { arm.setPosition(pow); }
+    public void setArmPos(double pow) { arm.setPosition(pow); }
 
     //Gamepad 1 Methods
     public void carouselPower(Gamepad gp) { //Blue - Left Trigger || Red - Right Trigger

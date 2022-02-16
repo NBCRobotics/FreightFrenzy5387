@@ -1,9 +1,12 @@
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.OpenCV;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+import org.firstinspires.ftc.teamcode.FFRobot;
+import org.firstinspires.ftc.teamcode.FieldMeasurements;
+import org.firstinspires.ftc.teamcode.OpenCV.BarcodeDetector;
 import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraFactory;
 import org.openftc.easyopencv.OpenCvCameraRotation;
@@ -16,6 +19,7 @@ public class FFAutoCamTester extends LinearOpMode {
 
     int stage;
     OpenCvCamera cam;
+    FFRobot robot = new FFRobot();
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -39,9 +43,6 @@ public class FFAutoCamTester extends LinearOpMode {
 
 
 
-        waitForStart();
-        runtime.reset();
-
         switch (detector.getLocation()) {
             case RIGHT:
                 stage = 1;
@@ -56,5 +57,32 @@ public class FFAutoCamTester extends LinearOpMode {
                 stage = 2;
                 break;
         }
+
+        waitForStart();
+        runtime.reset();
+
+        telemetry.addData("Stage set at: ", stage);
+        telemetry.update();
+
+        switch(stage) {
+            case 1:
+                while (robot.getSlideEncoder() < FieldMeasurements.getStageOneHeight()) {
+                    robot.setLinearPower(1);
+                }
+                robot.setLinearPower(0);
+                break;
+            case 2:
+                while (robot.getSlideEncoder() < FieldMeasurements.getStageTwoHeight()) {
+                    robot.setLinearPower(1);
+                }
+                robot.setLinearPower(0);
+            case 3:
+                while (robot.getSlideEncoder() < FieldMeasurements.getStageThreeHeight()) {
+                    robot.setLinearPower(1);
+                }
+                robot.setLinearPower(0);
+        }
+
+
     }
 }
