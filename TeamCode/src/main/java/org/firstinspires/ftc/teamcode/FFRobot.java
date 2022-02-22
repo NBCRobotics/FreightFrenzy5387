@@ -64,7 +64,7 @@ public class FFRobot {
 
         //intake.resetDeviceConfigurationForOpMode();
 
-        this.blDrive.setDirection(motF); //as declared before motF is forward motR is reverse
+        this.blDrive.setDirection(motF);
         this.brDrive.setDirection(motR);
         this.flDrive.setDirection(motF);
         this.frDrive.setDirection(motR);
@@ -72,13 +72,6 @@ public class FFRobot {
         this.arm.setDirection(serR);
         this.linearSlide.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         this.linearSlide.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-    }
-
-    public void setDriveMode(DcMotor.RunMode mode) {
-        this.blDrive.setMode(mode);
-        this.brDrive.setMode(mode);
-        this.flDrive.setMode(mode);
-        this.frDrive.setMode(mode);
     }
 
     public void leftPow(double pow){
@@ -101,19 +94,39 @@ public class FFRobot {
     public void driveTo(int pos) {
         setDriveMode(DcMotor.RunMode.RUN_USING_ENCODER);
         setDriveMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        setDriveMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        setDriveMode(DcMotor.RunMode.RUN_TO_POSITION);
+        setTargetPos(pos);
+        drive(0.5);
         while (flDrive.getCurrentPosition() < pos) {
-            flDrive.setTargetPosition(pos);
-            frDrive.setTargetPosition(pos);
-            blDrive.setTargetPosition(pos);
-            brDrive.setTargetPosition(pos);
+            double diff = ((flDrive.getCurrentPosition() - frDrive.getCurrentPosition()) * 0.0015);
+            frDrive.setPower(0.5 + diff);
+            diff = ((flDrive.getCurrentPosition() - blDrive.getCurrentPosition()) * 0.0015);
+            blDrive.setPower(0.5 + diff);
+            diff = ((flDrive.getCurrentPosition() - brDrive.getCurrentPosition()) * 0.0015);
+            brDrive.setPower(0.5 + diff);
         }
+        drive(0.0);
         setDriveMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
     }
 
-    public void turn() {
+    public void turn(int angle) {
 
     }
+
+
+    public void setTargetPos(int pos) {
+        flDrive.setTargetPosition(pos);
+        frDrive.setTargetPosition(pos);
+        blDrive.setTargetPosition(pos);
+        brDrive.setTargetPosition(pos);
+    }
+    public void setDriveMode(DcMotor.RunMode mode) {
+        this.blDrive.setMode(mode);
+        this.brDrive.setMode(mode);
+        this.flDrive.setMode(mode);
+        this.frDrive.setMode(mode);
+    }
+
 
     public void strafe(double pow){ //Pos = Right , Neg = Left
         blDrive.setPower(pow); //MOTF
@@ -131,27 +144,6 @@ public class FFRobot {
     }
 
     public void mechanumPov(Gamepad gp, Gamepad gp2){
-//        double drive = (double) (gp.left_stick_y);
-//        double turn = (double) ((gp.left_stick_x) * -1.5);
-//        double strafe = (double) ((gp.right_stick_x) * -1);
-//
-//        double nor = 0.0; //normal drive power
-//
-//        double frontLeftPower = (drive + turn + strafe);
-//        double backLeftPower = (drive - turn + strafe);
-//        double frontRightPower = (drive - turn - strafe);
-//        double backRightPower = (drive + turn - strafe);
-//
-
-//        if(abs(backRightPower) > 1 || abs(backLeftPower) > 1 ||
-//                abs(frontRightPower) > 1 || abs(frontLeftPower) > 1) {
-//
-//            //sets normal speed to greatest magnitude of drive power level(to normalize all power)
-//            nor = Math.max(abs(frontLeftPower), abs(backLeftPower));
-//            nor = Math.max(abs(frontRightPower), nor);
-//            nor = Math.max(abs(backRightPower), nor);
-//        }
-
 
         drive = (-gp.left_stick_y);
         strafe = (gp.left_stick_x);
@@ -208,7 +200,7 @@ public class FFRobot {
         linearSlide.setPower(-pow); //the motor is orientated as up is negative - this makes it more intuitive with our min and max values
     }
 
-    public void setLinearPower(String direction, double pow) { //what is this
+    public void setLinearPower(String direction, double pow) {
         pow = abs(pow);
         if (direction.equals("up")) {
             linearSlide.setPower(-pow);

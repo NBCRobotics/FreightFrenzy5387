@@ -9,6 +9,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.teamcode.FFRobot;
+import org.firstinspires.ftc.teamcode.FieldMeasurements;
 
 @Autonomous(name="literally going forward", group="LinearOpMode")
 public class FFAutoPark extends LinearOpMode {
@@ -28,15 +29,11 @@ public class FFAutoPark extends LinearOpMode {
 
 
 
-         robot.drive(-0.5);
+         robot.driveTo(3*FieldMeasurements.getTicksPerTile());
          doFor(3000);
          telemetry.addData("Status: ", "Autonomous Terminalized");
          telemetry.update();
 
-
-
-
-        robot.brake();
     }
 
     public void doFor(long ms) {

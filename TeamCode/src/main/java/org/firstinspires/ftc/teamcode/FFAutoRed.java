@@ -19,16 +19,14 @@ import org.openftc.easyopencv.OpenCvInternalCamera;
     FFRobot robot = new FFRobot();
     private ElapsedTime runtime = new ElapsedTime();
 
+    //RED means the carousel is on the LEFT
+
     final int MAXSLIDEHEIGHT = robot.getMax();
     final int MINSLIDEHEIGHT = robot.getMin();
 
-    final int ticksPerRev = 1440;
-    //0.2103 mm per tick
-    //if ticksPerRev = 1440, 0.1635 mm per tick
-    //609.6 millimeters per square
-    //3728.44037 ticks per square
-    final int carouselPos = 0;
-    private int stage = 0;
+    final int tickspertile = FieldMeasurements.getTicksPerTile();
+
+    int stage;
 
     OpenCvInternalCamera cam;
 
@@ -56,7 +54,6 @@ import org.openftc.easyopencv.OpenCvInternalCamera;
         });
 
 
-
         waitForStart();
         runtime.reset();
 
@@ -81,84 +78,15 @@ import org.openftc.easyopencv.OpenCvInternalCamera;
 
     }
 
-    public void doFor(long ms)
-    {
+    public void doFor(long ms) {
         sleep(ms);
         robot.brake();
     }
 
-    public void doFor()
-    {
+    public void doFor() {
         this.doFor(1000);
     }
 
-    public void basketToHeight(double pow, int height)
-    {
-
-    }
-
-//    public void raiseAndDrop(int stage, double pow)
-//    {
-//        double currentHeight = robot.getSlideEncoder(); //assuming it starts at ground level remember neg is up
-//        double targetHeight = 0; //where the linear slide wants to go
-//
-//        switch(stage) {
-//            case 1:
-//                targetHeight = MAXSLIDEHEIGHT / 5.0;
-//                while (currentHeight > targetHeight) {
-//                    robot.setLinearPower(-pow);
-//                    currentHeight = robot.getSlideEncoder();
-//                }
-//                robot.setLinearPower(0);
-//                sleep(500);
-//                robot.turnIntake(-1);
-//                sleep(500);
-//                robot.turnIntake(0);
-//                while (currentHeight < MINSLIDEHEIGHT)
-//                {
-//                    robot.setLinearPower(pow);
-//                    currentHeight = robot.getSlideEncoder();
-//                }
-//                robot.setLinearPower(0);
-//                break;
-//            case 2:
-//                targetHeight = MAXSLIDEHEIGHT / 2.0;
-//                while (currentHeight > targetHeight) {
-//                    robot.setLinearPower(-pow);
-//                    currentHeight = robot.getSlideEncoder();
-//                }
-//                robot.setLinearPower(0);
-//                sleep(500);
-//                robot.turnIntake(-1);
-//                sleep(500);
-//                robot.turnIntake(0);
-//                while (currentHeight < MINSLIDEHEIGHT)
-//                {
-//                    robot.setLinearPower(pow);
-//                    currentHeight = robot.getSlideEncoder();
-//                }
-//                robot.setLinearPower(0);
-//                break;
-//            case 3:
-//                targetHeight = MAXSLIDEHEIGHT;
-//                while (currentHeight > targetHeight) {
-//                    robot.setLinearPower(pow);
-//                    currentHeight = robot.getSlideEncoder();
-//                }
-//                robot.setLinearPower(0);
-//                sleep(500);
-//                robot.turnIntake(-1);
-//                sleep(500);
-//                robot.turnIntake(0);
-//                while (currentHeight < MINSLIDEHEIGHT)
-//                {
-//                    robot.setLinearPower(-pow);
-//                    currentHeight = robot.getSlideEncoder();
-//                }
-//                robot.setLinearPower(0);
-//                break;
-//        }
-//
-//
-//    }
 }
+
+
