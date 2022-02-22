@@ -11,14 +11,14 @@ import org.openftc.easyopencv.OpenCvPipeline;
 
 
 public class BarcodeDetector extends OpenCvPipeline {
-    private Telemetry telemetry;
-    private Mat mat = new Mat();
+    Telemetry telemetry;
+    Mat mat = new Mat();
     public BarcodeDetector (Telemetry t) {
         telemetry = t;
     }
 
-    private Scalar colorNotFound = new Scalar(255, 0, 0);
-    private Scalar colorFound = new Scalar(0, 255, 0);
+    Scalar colorNotFound = new Scalar(255, 0, 0);
+    Scalar colorFound = new Scalar(0, 255, 0);
     public enum Location {
         RIGHT, //stage one
         MIDDLE, //stage two
@@ -26,9 +26,9 @@ public class BarcodeDetector extends OpenCvPipeline {
         UNKNOWN
     }
     private Location location;
-    static final Rect RIGHT_ROI = new Rect(new Point(240, 140), new Point(280, 180));
-    static final Rect MIDDLE_ROI = new Rect(new Point(140, 140), new Point(180, 180));
-    static final Rect LEFT_ROI = new Rect(new Point(40, 140), new Point(80, 180));
+    static final Rect RIGHT_ROI = new Rect(new Point(200, 100), new Point(240, 140));
+    static final Rect MIDDLE_ROI = new Rect(new Point(100, 100), new Point(140, 140));
+    static final Rect LEFT_ROI = new Rect(new Point(0, 100), new Point(40, 140));
 
     //looks for team shipping element pos
     @Override

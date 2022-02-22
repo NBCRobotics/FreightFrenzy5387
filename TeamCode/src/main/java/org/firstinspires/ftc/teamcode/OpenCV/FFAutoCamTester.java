@@ -3,7 +3,7 @@ package org.firstinspires.ftc.teamcode.OpenCV;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
-
+import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.FFRobot;
 import org.firstinspires.ftc.teamcode.FieldMeasurements;
 import org.firstinspires.ftc.teamcode.OpenCV.BarcodeDetector;
@@ -17,7 +17,7 @@ public class FFAutoCamTester extends LinearOpMode {
 
     private ElapsedTime runtime = new ElapsedTime();
 
-    int stage;
+    int stage = -1;
     OpenCvCamera cam;
     FFRobot robot = new FFRobot();
 
@@ -31,7 +31,7 @@ public class FFAutoCamTester extends LinearOpMode {
         cam.openCameraDeviceAsync(new OpenCvCamera.AsyncCameraOpenListener() {
             @Override
             public void onOpened() {
-                cam.startStreaming(320, 240, OpenCvCameraRotation.UPSIDE_DOWN);
+                cam.startStreaming(240, 320, OpenCvCameraRotation.UPSIDE_DOWN);
             }
 
             @Override
@@ -42,21 +42,17 @@ public class FFAutoCamTester extends LinearOpMode {
 
 
 
-
-        switch (detector.getLocation()) {
-            case RIGHT:
-                stage = 1;
-                break;
-            case MIDDLE:
-                stage = 2;
-                break;
-            case LEFT:
-                stage = 3;
-                break;
-            case UNKNOWN:
-                stage = 2;
-                break;
+        if (detector.getLocation() == BarcodeDetector.Location.RIGHT) {
+            stage = 1;
+        } else if (detector.getLocation() == BarcodeDetector.Location.MIDDLE) {
+            stage = 2;
+        } else if (detector.getLocation() == BarcodeDetector.Location.LEFT) {
+            stage = 3;
+        } else {
+            stage = 2;
         }
+
+
 
         waitForStart();
         runtime.reset();

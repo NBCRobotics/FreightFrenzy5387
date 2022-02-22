@@ -105,12 +105,27 @@ public class FFRobot {
             diff = ((flDrive.getCurrentPosition() - brDrive.getCurrentPosition()) * 0.0015);
             brDrive.setPower(0.5 + diff);
         }
-        drive(0.0);
+        brake();
         setDriveMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
     }
 
-    public void turn(int angle) {
+    public void turn(int angle, char direction) {
+        int pos = angle/180 * 224;
 
+        setDriveMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        setDriveMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        setDriveMode(DcMotor.RunMode.RUN_TO_POSITION);
+        setTargetPos(pos);
+        if (direction == 'l') {
+            drive(-0.5, 0.5);
+        } else if (direction == 'r') {
+            drive(0.5, -0.5);
+        }
+        while (flDrive.getCurrentPosition() < pos) {
+
+        }
+        brake();
+        setDriveMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
     }
 
 
@@ -265,7 +280,7 @@ public class FFRobot {
         else
             arm.setPosition(0.5);
     }
-
+    
     public void linearPower(Gamepad gp){ //dynamically will set a "max" - stage one, two or three, or above all stages
         if (gp.y)
             currentMax = stageThree;
