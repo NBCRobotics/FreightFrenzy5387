@@ -1,9 +1,11 @@
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.EncodersAutonomous;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+import org.firstinspires.ftc.teamcode.FFRobot;
+import org.firstinspires.ftc.teamcode.FieldMeasurements;
 import org.firstinspires.ftc.teamcode.OpenCV.BarcodeDetector;
 import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraFactory;
@@ -53,10 +55,6 @@ import org.openftc.easyopencv.OpenCvInternalCamera;
             }
         });
 
-
-        waitForStart();
-        runtime.reset();
-
         if (detector.getLocation() == BarcodeDetector.Location.RIGHT) {
             stage = 1;
         } else if (detector.getLocation() == BarcodeDetector.Location.MIDDLE) {
@@ -66,6 +64,10 @@ import org.openftc.easyopencv.OpenCvInternalCamera;
         } else {
             stage = 2;
         }
+
+        waitForStart();
+        runtime.reset();
+
 
         telemetry.addData("Status: ", "Autonomous Initialized");
         telemetry.addData("Status: ", "Stage is set to" + stage);

@@ -28,15 +28,15 @@ public class FFRobot {
     private Servo arm = null;
 
     private int zero = 0;   //linear slide encoders
-    private final int MAX = 9500;
+    private final int MAX = 8000;
     private final int MIN = 0;
     private int currentMax = MAX;
     private int currentMin = MIN;
     private int initPos;
 
-    private int stageTwo = FieldMeasurements.getStageTwoHeight();
-    private int stageOne = FieldMeasurements.getStageOneHeight();
-    private int stageThree = FieldMeasurements.getStageThreeHeight();
+    private int stageTwo = FieldMeasurements.getStageHeight(1);
+    private int stageOne = FieldMeasurements.getStageHeight(2);
+    private int stageThree = FieldMeasurements.getStageHeight(3);
 
     DcMotorSimple.Direction motF = DcMotorSimple.Direction.FORWARD;
     DcMotorSimple.Direction motR = DcMotorSimple.Direction.REVERSE;
@@ -80,7 +80,7 @@ public class FFRobot {
     }
     public void rightPow(double pow){
         this.brDrive.setPower(-pow);
-        this.blDrive.setPower(-pow);
+        this.frDrive.setPower(-pow);
     }
     public void drive(double lPow, double rPow){
         this.leftPow(lPow);
@@ -96,17 +96,29 @@ public class FFRobot {
         setDriveMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         setDriveMode(DcMotor.RunMode.RUN_TO_POSITION);
         setTargetPos(pos);
-        drive(0.5);
-        while (flDrive.getCurrentPosition() < pos) {
-            double diff = ((flDrive.getCurrentPosition() - frDrive.getCurrentPosition()) * 0.0015);
-            frDrive.setPower(0.5 + diff);
-            diff = ((flDrive.getCurrentPosition() - blDrive.getCurrentPosition()) * 0.0015);
-            blDrive.setPower(0.5 + diff);
-            diff = ((flDrive.getCurrentPosition() - brDrive.getCurrentPosition()) * 0.0015);
-            brDrive.setPower(0.5 + diff);
+        if (pos > 0) {
+            drive(0.5);
+            while (flDrive.getCurrentPosition() < pos) {
+                double diff = ((flDrive.getCurrentPosition() - frDrive.getCurrentPosition()) * 0.0015);
+                frDrive.setPower(0.5 + diff);
+                diff = ((flDrive.getCurrentPosition() - blDrive.getCurrentPosition()) * 0.0015);
+                blDrive.setPower(0.5 + diff);
+                diff = ((flDrive.getCurrentPosition() - brDrive.getCurrentPosition()) * 0.0015);
+                brDrive.setPower(0.5 + diff);
+            }
+        } else {
+            drive(-0.5);
+            while (flDrive.getCurrentPosition() > pos) {
+                double diff = ((flDrive.getCurrentPosition() - frDrive.getCurrentPosition()) * 0.0015);
+                frDrive.setPower(-0.5 + diff);
+                diff = ((flDrive.getCurrentPosition() - blDrive.getCurrentPosition()) * 0.0015);
+                blDrive.setPower(-0.5 + diff);
+                diff = ((flDrive.getCurrentPosition() - brDrive.getCurrentPosition()) * 0.0015);
+                brDrive.setPower(-0.5 + diff);
+            }
         }
         brake();
-        setDriveMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        setDriveMode(DcMotor.RunMode.RUN_USING_ENCODER);
     }
 
     public void turn(int angle, char direction) {
@@ -121,11 +133,12 @@ public class FFRobot {
         } else if (direction == 'r') {
             drive(0.5, -0.5);
         }
-        while (flDrive.getCurrentPosition() < pos) {
+
+        while (frDrive.getCurrentPosition() < pos) {
 
         }
         brake();
-        setDriveMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        setDriveMode(DcMotor.RunMode.RUN_USING_ENCODER);
     }
 
 
@@ -143,11 +156,11 @@ public class FFRobot {
     }
 
 
-    public void strafe(double pow){ //Pos = Right , Neg = Left
-        blDrive.setPower(pow); //MOTF
-        flDrive.setPower(-pow); //MOTF
-        brDrive.setPower(-pow); //MOTR
-        frDrive.setPower(pow); //MOTR       //A:WAYS INPUT 1 LMAO
+    public void strafe(double pow){ //Pos = left , Neg = right
+        blDrive.setPower(-pow); //MOTF
+        flDrive.setPower(pow); //MOTF
+        brDrive.setPower(pow); //MOTR
+        frDrive.setPower(-pow); //MOTR       //A:WAYS INPUT 1 LMAO
     }
 
     public void strafe(String s, double pow) {
@@ -176,12 +189,23 @@ public class FFRobot {
         backRightPower = (drive + strafe - turn);
 
         //to slow down the drive if needed
-        double slowDown = gp.left_bumper ? 8.0 : 1.0;
+        double slowDown = gp.left_bumper ? 4.0 : 1.0;
+        slowDown = gp.right_bumper ? 2.0 : slowDown;
 
         this.flDrive.setPower((frontLeftPower)/(slowDown));
         this.blDrive.setPower((backLeftPower)/(slowDown));
         this.frDrive.setPower((frontRightPower)/(slowDown));
         this.brDrive.setPower((backRightPower)/(slowDown));
+
+//        double slowDownMedium = gp.right_bumper ? 4.0 : 1.0;
+
+        /*
+
+        this.flDrive.setPower((frontLeftPower)/(slowDownMedium));
+        this.blDrive.setPower((backLeftPower)/(slowDownMedium));
+        this.frDrive.setPower((frontRightPower)/(slowDownMedium));
+        this.brDrive.setPower((backRightPower)/(slowDownMedium));
+        */
 
         intake(gp2);
         linearPower(gp2);
@@ -262,6 +286,7 @@ public class FFRobot {
 //        drive = gp.dpad_up ? -1.0 : gp.dpad_down ? 1.0 : 0.0;
 //        strafe = gp.dpad_left ? -1.0 : gp.dpad_right ? 1.0 : 0.0;
     }
+
 
 
     //GamePad 2 Methods

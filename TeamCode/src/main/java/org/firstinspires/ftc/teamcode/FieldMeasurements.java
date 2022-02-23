@@ -14,21 +14,24 @@ public class FieldMeasurements {
     public static final long TIME_FOR_TILE = 1075; //in MS
     private static final int STAGEONE_HEIGHT = 3300;    //IN TICKS
     private static final int STAGETWO_HEIGHT = 5300;   //IN TICKS
-    private static final int STAGETHREE_HEIGHT = 9000;
+    private static final int STAGETHREE_HEIGHT = 7500;
     private static final double circumfrence = 3.61;
 
-    public static int getStageOneHeight() {
-        return STAGEONE_HEIGHT;
+    public static int getStageHeight(int stage) {
+        if (stage == 1) {
+            return STAGEONE_HEIGHT;
+        }
+        if (stage == 2) {
+            return STAGETWO_HEIGHT;
+        }
+        if (stage == 3) {
+            return STAGETHREE_HEIGHT;
+        }
+        return -1;
     }
 
-    public static int getStageTwoHeight() {
-        return STAGETWO_HEIGHT;
+    public static int getTicksPerTile() {
+        return (int)ticksPerTile;
     }
-
-    public static int getStageThreeHeight() {
-        return STAGETHREE_HEIGHT;
-    }
-
-    public static int getTicksPerTile() { return (int)ticksPerTile; }
 
 }

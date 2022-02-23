@@ -31,7 +31,7 @@ public class FFAutoCamTester extends LinearOpMode {
         cam.openCameraDeviceAsync(new OpenCvCamera.AsyncCameraOpenListener() {
             @Override
             public void onOpened() {
-                cam.startStreaming(240, 320, OpenCvCameraRotation.UPSIDE_DOWN);
+                cam.startStreaming(320, 240, OpenCvCameraRotation.UPSIDE_DOWN);
             }
 
             @Override
@@ -60,24 +60,7 @@ public class FFAutoCamTester extends LinearOpMode {
         telemetry.addData("Stage set at: ", stage);
         telemetry.update();
 
-        switch(stage) {
-            case 1:
-                while (robot.getSlideEncoder() < FieldMeasurements.getStageOneHeight()) {
-                    robot.setLinearPower(1);
-                }
-                robot.setLinearPower(0);
-                break;
-            case 2:
-                while (robot.getSlideEncoder() < FieldMeasurements.getStageTwoHeight()) {
-                    robot.setLinearPower(1);
-                }
-                robot.setLinearPower(0);
-            case 3:
-                while (robot.getSlideEncoder() < FieldMeasurements.getStageThreeHeight()) {
-                    robot.setLinearPower(1);
-                }
-                robot.setLinearPower(0);
-        }
+
 
 
     }

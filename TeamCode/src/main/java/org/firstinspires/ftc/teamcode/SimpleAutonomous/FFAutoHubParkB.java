@@ -15,6 +15,7 @@ import java.lang.reflect.Field;
 
 //DIDNT FINISH OOPS MY BAD
 @Autonomous(name="FFAutoHubParkB", group="LinearOpMode")
+@Disabled
 public class FFAutoHubParkB extends LinearOpMode {
     FFRobot robot = new FFRobot();
 

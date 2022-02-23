@@ -11,6 +11,7 @@ import com.qualcomm.robotcore.util.Range;
 import org.firstinspires.ftc.teamcode.FFRobot;
 
 @Autonomous(name="FFAutoForwardRight", group="LinearOpMode")
+@Disabled
 public class FFAutoForwardRight extends LinearOpMode {
     FFRobot robot = new FFRobot();
 

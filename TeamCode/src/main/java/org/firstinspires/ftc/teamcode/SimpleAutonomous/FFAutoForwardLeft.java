@@ -12,6 +12,7 @@ import org.firstinspires.ftc.teamcode.FFRobot;
 import org.firstinspires.ftc.teamcode.FieldMeasurements;
 
 @Autonomous(name="FFAutoForwardLeft", group="LinearOpMode")
+@Disabled
 public class FFAutoForwardLeft extends LinearOpMode {
     FFRobot robot = new FFRobot();
 
