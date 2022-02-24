@@ -17,7 +17,7 @@ import org.openftc.easyopencv.OpenCvCameraRotation;
 import org.openftc.easyopencv.OpenCvInternalCamera;
 
 @Autonomous(name="Hub and Park Blue", group="LinearOpMode")
-public class FFAutoWarehouseB extends LinearOpMode {
+public class  FFAutoWarehouseB extends LinearOpMode {
     FFRobot robot = new FFRobot();
     final int tickspertile = FieldMeasurements.getTicksPerTile();
     //OpenCvCamera cam;
@@ -62,7 +62,7 @@ public class FFAutoWarehouseB extends LinearOpMode {
         runtime.reset();
 
         robot.driveTo(100);
-        robot.strafe(0.5);
+        robot.strafe(0.5); //switched for red
         doFor(900);
         robot.driveTo((tickspertile / 2) - 200);
         robot.brake();
@@ -76,6 +76,7 @@ public class FFAutoWarehouseB extends LinearOpMode {
         robot.setLinearPower(0);
 
         robot.driveTo(100);
+        //aligned with hub
 
         robot.turnIntake(1);
         sleep(2000);
@@ -90,18 +91,13 @@ public class FFAutoWarehouseB extends LinearOpMode {
         sleep(100);
         robot.setLinearPower(0);
         robot.brake();
-
-//        robot.leftPow(-0.5);
-//        robot.rightPow(0.5);
-//        sleep(500);
+        //off the hub
 
 
-        robot.brake();
-
-
+        //turns and goes into warehouse
         robot.leftPow(-0.5);
         robot.rightPow(0.5);
-        doFor(1600);
+        doFor(2000);
         robot.strafe(-0.5);
         doFor(1500);
         robot.driveTo(2500);
@@ -121,6 +117,5 @@ public class FFAutoWarehouseB extends LinearOpMode {
 
     public void doFor() {
         this.doFor(1000);
-
     }
 }

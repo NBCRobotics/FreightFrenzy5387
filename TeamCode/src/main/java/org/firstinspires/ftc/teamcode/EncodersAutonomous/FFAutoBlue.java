@@ -69,6 +69,7 @@ public class FFAutoBlue extends LinearOpMode {
         doFor(700);
         robot.driveTo((tickspertile/2)-200);
 
+
         sleep(100);
         robot.setLinearPower(1);
         while (robot.getSlideEncoder() < FieldMeasurements.getStageHeight(stage)) {
@@ -78,7 +79,7 @@ public class FFAutoBlue extends LinearOpMode {
         robot.setLinearPower(0);
 
         robot.driveTo(100);
-
+        //aligned with hub
         robot.turnIntake(1);
         sleep(2000);
         robot.turnIntake(0);
@@ -92,6 +93,13 @@ public class FFAutoBlue extends LinearOpMode {
         sleep(100);
         robot.setLinearPower(0);
         robot.brake();
+        //slightly off the hub
+
+
+        //at carousel
+
+        //parked
+        telemetry.addData("Status: ", "Terminated");
 
 
     }
