@@ -122,7 +122,7 @@ public class FFRobot {
     }
 
     public int timeForTurn(int angle) {
-        return (angle*2000/180);
+        return (angle*1800/180);
     }
 
 

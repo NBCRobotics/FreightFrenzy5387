@@ -58,6 +58,8 @@ public class FFAutoWarehouseR extends LinearOpMode {
 //            stage = 3;
 //        }
 
+        robot.setArmPos(0.5);
+
         waitForStart();
         runtime.reset();
 
@@ -79,10 +81,10 @@ public class FFAutoWarehouseR extends LinearOpMode {
         sleep(100);
         robot.setLinearPower(0);
 
-        robot.driveTo(100);
+        robot.driveTo(200);
         //aligned with hub
 
-        robot.turnIntake(0.7);
+        robot.turnIntake(0.65);
         sleep(2000);
         robot.turnIntake(0);
 
@@ -103,7 +105,7 @@ public class FFAutoWarehouseR extends LinearOpMode {
         robot.rightPow(0.5);
         doFor(robot.timeForTurn(90));
         robot.strafe(0.5);
-        doFor(1850);
+        doFor(1950);
         robot.driveTo(3000);
 
 

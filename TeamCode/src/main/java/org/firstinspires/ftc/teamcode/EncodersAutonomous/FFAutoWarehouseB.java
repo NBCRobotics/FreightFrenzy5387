@@ -29,6 +29,7 @@ public class  FFAutoWarehouseB extends LinearOpMode {
         telemetry.addData("Status", "Initialized");
         telemetry.update();
         robot.init(hardwareMap);
+        robot.setArmPos(0.5);
 
 //        int camID = hardwareMap.appContext.getResources()
 //                .getIdentifier("camID", "id", hardwareMap.appContext.getPackageName());
@@ -61,6 +62,8 @@ public class  FFAutoWarehouseB extends LinearOpMode {
         waitForStart();
         runtime.reset();
 
+        sleep(10000);
+
         robot.setLinearPower(1);
         sleep(100);
         robot.setLinearPower(0);
@@ -79,10 +82,10 @@ public class  FFAutoWarehouseB extends LinearOpMode {
         sleep(100);
         robot.setLinearPower(0);
 
-        robot.driveTo(100);
+        robot.driveTo(200);
         //aligned with hub
 
-        robot.turnIntake(0.7);
+        robot.turnIntake(0.65);
         sleep(2000);
         robot.turnIntake(0);
 
@@ -101,9 +104,9 @@ public class  FFAutoWarehouseB extends LinearOpMode {
         //turns and goes into warehouse
         robot.leftPow(0.5);
         robot.rightPow(-0.5);
-        doFor(robot.timeForTurn(90));
+        doFor(robot.timeForTurn(93));
         robot.strafe(-0.5);
-        doFor(1850);
+        doFor(1900);
         robot.driveTo(3000);
     }
 

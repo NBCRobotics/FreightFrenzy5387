@@ -29,8 +29,8 @@ public class FFAutoPark extends LinearOpMode {
 
 
 
-         robot.driveTo(3*FieldMeasurements.getTicksPerTile());
-         doFor(3000);
+         robot.driveTo(1400);
+
          telemetry.addData("Status: ", "Autonomous Terminalized");
          telemetry.update();
 

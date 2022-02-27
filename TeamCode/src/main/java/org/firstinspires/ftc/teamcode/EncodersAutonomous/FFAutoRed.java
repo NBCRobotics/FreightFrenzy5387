@@ -14,7 +14,7 @@ import org.openftc.easyopencv.OpenCvInternalCamera;
 
 //Made by Andrew Hu
 
-@Autonomous(name="FFAutoRed", group="LinearOpMode")
+@Autonomous(name="Carousel and Park Red", group="LinearOpMode")
 //@Disabled
 //RED
     public class FFAutoRed extends LinearOpMode {
@@ -28,53 +28,76 @@ import org.openftc.easyopencv.OpenCvInternalCamera;
 
     final int tickspertile = FieldMeasurements.getTicksPerTile();
 
-    int stage;
+    int stage = 3;
 
     OpenCvInternalCamera cam;
 
     //OpenCvWebcam cam;
     @Override
     public void runOpMode() {
-        robot.init(hardwareMap);
-
-
-        int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
-        cam = OpenCvCameraFactory.getInstance().createInternalCamera(OpenCvInternalCamera.CameraDirection.BACK, cameraMonitorViewId);
-
-        BarcodeDetector detector = new BarcodeDetector(telemetry);
-        cam.setPipeline(detector);
-        cam.openCameraDeviceAsync(new OpenCvCamera.AsyncCameraOpenListener() {
-            @Override
-            public void onOpened() {
-                cam.startStreaming(240, 320, OpenCvCameraRotation.UPSIDE_DOWN);
-            }
-
-            @Override
-            public void onError(int errorCode) {
-                telemetry.addData("Error: ", errorCode + "Camera not started");
-            }
-        });
-
-        if (detector.getLocation() == BarcodeDetector.Location.RIGHT) {
-            stage = 1;
-        } else if (detector.getLocation() == BarcodeDetector.Location.MIDDLE) {
-            stage = 2;
-        } else if (detector.getLocation() == BarcodeDetector.Location.LEFT) {
-            stage = 3;
-        } else {
-            stage = 2;
-        }
-
         waitForStart();
         runtime.reset();
+        robot.init(hardwareMap);
 
-
-        telemetry.addData("Status: ", "Autonomous Initialized");
-        telemetry.addData("Status: ", "Stage is set to" + stage);
+        telemetry.addData("Status", "Initialized");
         telemetry.update();
+        robot.init(hardwareMap);
+
+        robot.setArmPos(0.5);
+
+        robot.setLinearPower(1);
+        sleep(100);
+        robot.setLinearPower(0);
+
+        robot.driveTo(100);
+        robot.strafe(0.5);
+        doFor(1200);
+        robot.driveTo((tickspertile/2)-250);
+
+        //raise up
+        sleep(100);
+        robot.setLinearPower(1);
+        while (robot.getSlideEncoder() < FieldMeasurements.getStageHeight(stage)) {
+
+        }
+        sleep(100);
+        robot.setLinearPower(0);
+        robot.driveTo(100);
+        //aligned with hub
+
+        robot.turnIntake(0.65);
+        sleep(2000);
+        robot.turnIntake(0);
+
+        robot.driveTo(-200);
+        sleep(100);
+        robot.setLinearPower(-1);
+        while(robot.getSlideEncoder() > robot.getMin()) {
+
+        }
+        sleep(100);
+        robot.setLinearPower(0);
+        robot.brake();
+        //slightly off the hub
+
+        robot.leftPow(-0.5);
+        robot.rightPow(0.5);
+        doFor(robot.timeForTurn(90));
+        robot.strafe("right", 0.5);
+        doFor(1200);
+        robot.driveTo(-2200);
+        robot.setCarouselPower(0.6);
+        sleep(5000);
+        robot.setCarouselPower(0);
+        //at carousel
+
+        robot.strafe("left", 0.5);
+        doFor(1500);
+        robot.driveTo(-600);
 
 
-
+        //parked
+        telemetry.addData("Status: ", "Terminated");
     }
 
     public void doFor(long ms) {
