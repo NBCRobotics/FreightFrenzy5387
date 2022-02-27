@@ -60,6 +60,10 @@ public class FFAutoBlue extends LinearOpMode {
         waitForStart();
         runtime.reset();
 
+        robot.setLinearPower(1);
+        sleep(100);
+        robot.setLinearPower(0);
+
         telemetry.addData("Status", "Initialized");
         telemetry.update();
         robot.init(hardwareMap);
@@ -69,7 +73,7 @@ public class FFAutoBlue extends LinearOpMode {
         doFor(700);
         robot.driveTo((tickspertile/2)-200);
 
-
+        //raise up
         sleep(100);
         robot.setLinearPower(1);
         while (robot.getSlideEncoder() < FieldMeasurements.getStageHeight(stage)) {
@@ -77,9 +81,9 @@ public class FFAutoBlue extends LinearOpMode {
         }
         sleep(100);
         robot.setLinearPower(0);
-
         robot.driveTo(100);
         //aligned with hub
+
         robot.turnIntake(1);
         sleep(2000);
         robot.turnIntake(0);

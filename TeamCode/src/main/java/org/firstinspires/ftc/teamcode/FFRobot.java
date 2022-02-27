@@ -121,24 +121,8 @@ public class FFRobot {
         setDriveMode(DcMotor.RunMode.RUN_USING_ENCODER);
     }
 
-    public void turn(int angle, char direction) {
-        int pos = angle/180 * 224;
-
-        setDriveMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        setDriveMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        setDriveMode(DcMotor.RunMode.RUN_TO_POSITION);
-        setTargetPos(pos);
-        if (direction == 'l') {
-            drive(-0.5, 0.5);
-        } else if (direction == 'r') {
-            drive(0.5, -0.5);
-        }
-
-        while (frDrive.getCurrentPosition() < pos) {
-
-        }
-        brake();
-        setDriveMode(DcMotor.RunMode.RUN_USING_ENCODER);
+    public int timeForTurn(int angle) {
+        return (angle*2000/180);
     }
 
 
