@@ -9,13 +9,10 @@ public class FFTeleOp extends OpMode {
 
     @Override
     public void init() {
-        //WHY    ??
         telemetry.addData("Status", "Initialized");
         telemetry.update();
 
         robot.init(hardwareMap);
-
-        //testing more
 
 
     }

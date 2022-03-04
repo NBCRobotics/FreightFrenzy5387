@@ -60,18 +60,19 @@ public class FFAutoBlue extends LinearOpMode {
         waitForStart();
         runtime.reset();
 
-        robot.setLinearPower(1);
-        sleep(100);
-        robot.setLinearPower(0);
-
         telemetry.addData("Status", "Initialized");
         telemetry.update();
         robot.init(hardwareMap);
 
+        robot.setLinearPower(1);
+        sleep(100);
+        robot.setLinearPower(0);
+
         robot.driveTo(100);
         robot.strafe(-0.5);
-        doFor(700);
+        doFor(1100);
         robot.driveTo((tickspertile/2)-200);
+        robot.brake();
 
         //raise up
         sleep(100);
@@ -99,8 +100,24 @@ public class FFAutoBlue extends LinearOpMode {
         robot.brake();
         //slightly off the hub
 
+        robot.leftPow(0.5);
+        robot.rightPow(-0.5);
+        doFor(robot.timeForTurn(63));
+        robot.driveTo(-2*tickspertile);
 
         //at carousel
+        robot.setCarouselPower(0.5);
+        sleep(5000);
+        robot.setCarouselPower(0);
+
+        robot.driveTo(100);
+        robot.leftPow(0.5);
+        robot.rightPow(-0.5);
+        doFor(robot.timeForTurn(27));
+        robot.driveTo(-500);
+        robot.strafe("right", 0.5);
+        doFor(1500);
+
 
         //parked
         telemetry.addData("Status: ", "Terminated");

@@ -28,10 +28,9 @@ public class FFRobot {
     private Servo arm = null;
 
     private int zero = 0;   //linear slide encoders
-    private final int MAX = 8000;
+    private final int MAX = 8500;
     private final int MIN = 0;
     private int currentMax = MAX;
-    private int currentMin = MIN;
     private int initPos;
 
     private int stageTwo = FieldMeasurements.getStageHeight(1);
@@ -122,7 +121,7 @@ public class FFRobot {
     }
 
     public int timeForTurn(int angle) {
-        return (angle*2000/180);
+        return (angle*2050/180);
     }
 
 

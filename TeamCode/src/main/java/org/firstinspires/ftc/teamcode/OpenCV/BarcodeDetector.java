@@ -23,19 +23,17 @@ public class BarcodeDetector extends OpenCvPipeline {
         RIGHT, //stage one
         MIDDLE, //stage two
         LEFT, //stage three
-        UNKNOWN
+        UNKNOWN //also unknwon
     }
     private Location location;
-    static final Rect RIGHT_ROI = new Rect(new Point(200, 100), new Point(240, 140));
-    static final Rect MIDDLE_ROI = new Rect(new Point(100, 100), new Point(140, 140));
-    static final Rect LEFT_ROI = new Rect(new Point(0, 100), new Point(40, 140));
+    static final Rect RIGHT_ROI = new Rect(new Point(150, 40), new Point(190, 80));
+    static final Rect MIDDLE_ROI = new Rect(new Point(50, 40), new Point(90, 80));
+    static final Rect LEFT_ROI = new Rect(new Point(0, 40), new Point(20, 80));
 
     //looks for team shipping element pos
     @Override
     public Mat processFrame(Mat input) {
         Imgproc.cvtColor(input, mat, Imgproc.COLOR_RGB2HSV);
-//        Scalar lowHSV = new Scalar(226, 43, 20);  //lowest value for blue
-//        Scalar highHSV = new Scalar(250, 255, 255); //highest value for blue (sorta not really actually at all)
 
         Scalar lowHSV = new Scalar(90, 150, 0);
         Scalar highHSV = new Scalar(140, 255, 255);

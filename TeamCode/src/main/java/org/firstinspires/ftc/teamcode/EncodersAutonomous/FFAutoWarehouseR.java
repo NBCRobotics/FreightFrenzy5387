@@ -61,13 +61,19 @@ public class FFAutoWarehouseR extends LinearOpMode {
         waitForStart();
         runtime.reset();
 
+        telemetry.addData("Status", "Initialized");
+        telemetry.update();
+        robot.init(hardwareMap);
+
+        robot.setArmPos(0.5);
+
         robot.setLinearPower(1);
         sleep(100);
         robot.setLinearPower(0);
 
         robot.driveTo(100);
         robot.strafe(-0.5);
-        doFor(1200);
+        doFor(1100);
         robot.driveTo((tickspertile / 2) - 250);
         robot.brake();
 
@@ -82,7 +88,7 @@ public class FFAutoWarehouseR extends LinearOpMode {
         robot.driveTo(100);
         //aligned with hub
 
-        robot.turnIntake(0.7);
+        robot.turnIntake(0.5);
         sleep(2000);
         robot.turnIntake(0);
 
