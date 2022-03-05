@@ -14,7 +14,7 @@ import org.openftc.easyopencv.OpenCvInternalCamera;
 
 //Made by Andrew Hu
 
-@Autonomous(name="FFAutoBlue", group="LinearOpMode")
+@Autonomous(name="Carousel and Park Blue", group="LinearOpMode")
 //@Disabled
 //RED
 public class FFAutoBlue extends LinearOpMode {
@@ -22,47 +22,22 @@ public class FFAutoBlue extends LinearOpMode {
     //BLUE means the carousel is to the RIGHT of the robot
     //Drop at proper stage, go to carousel, park in blue square
     private ElapsedTime runtime = new ElapsedTime();
-    int stage;
+    int stage = 3;
     final int tickspertile = FieldMeasurements.getTicksPerTile();
 
     OpenCvCamera cam;
 
     @Override
     public void runOpMode() {
-        int camID = hardwareMap.appContext.getResources()
-                .getIdentifier("camID", "id", hardwareMap.appContext.getPackageName());
-        cam = OpenCvCameraFactory.getInstance()
-                .createInternalCamera(OpenCvInternalCamera.CameraDirection.FRONT, camID);
-
-        BarcodeDetector detector = new BarcodeDetector(telemetry); //barcode
-        cam.setPipeline(detector);
-        cam.openCameraDeviceAsync(new OpenCvCamera.AsyncCameraOpenListener() {
-            @Override
-            public void onOpened() {
-                cam.startStreaming(320, 240, OpenCvCameraRotation.UPSIDE_DOWN);
-            }
-            @Override
-            public void onError(int errorCode) {
-
-            }
-        });
-
-        if (detector.getLocation() == BarcodeDetector.Location.RIGHT) {
-            stage = 1;
-        } else if (detector.getLocation() == BarcodeDetector.Location.MIDDLE) {
-            stage = 2;
-        } else if (detector.getLocation() == BarcodeDetector.Location.LEFT) {
-            stage = 3;
-        } else {
-            stage = 3;
-        }
-
         waitForStart();
         runtime.reset();
+        robot.init(hardwareMap);
 
         telemetry.addData("Status", "Initialized");
         telemetry.update();
         robot.init(hardwareMap);
+
+        robot.setArmPos(0.5);
 
         robot.setLinearPower(1);
         sleep(100);
@@ -70,9 +45,8 @@ public class FFAutoBlue extends LinearOpMode {
 
         robot.driveTo(100);
         robot.strafe(-0.5);
-        doFor(1100);
-        robot.driveTo((tickspertile/2)-200);
-        robot.brake();
+        doFor(1200);
+        robot.driveTo((tickspertile/2)-250);
 
         //raise up
         sleep(100);
@@ -85,7 +59,7 @@ public class FFAutoBlue extends LinearOpMode {
         robot.driveTo(100);
         //aligned with hub
 
-        robot.turnIntake(1);
+        robot.turnIntake(0.65);
         sleep(2000);
         robot.turnIntake(0);
 
@@ -100,23 +74,22 @@ public class FFAutoBlue extends LinearOpMode {
         robot.brake();
         //slightly off the hub
 
-        robot.leftPow(0.5);
-        robot.rightPow(-0.5);
-        doFor(robot.timeForTurn(63));
-        robot.driveTo(-2*tickspertile);
-
-        //at carousel
-        robot.setCarouselPower(0.5);
+        robot.driveTo(-1*(tickspertile/2)+450);
+        robot.strafe("right", 0.5);
+        doFor(3000);
+        robot.driveTo(-300);
+        robot.setCarouselPower(-0.6);
         sleep(5000);
         robot.setCarouselPower(0);
+        //at carousel
 
-        robot.driveTo(100);
+        robot.driveTo(tickspertile/2);
         robot.leftPow(0.5);
         robot.rightPow(-0.5);
-        doFor(robot.timeForTurn(27));
-        robot.driveTo(-500);
+        doFor(robot.timeForTurn(90));
         robot.strafe("right", 0.5);
-        doFor(1500);
+        doFor(300);
+        robot.driveTo(-600);
 
 
         //parked
