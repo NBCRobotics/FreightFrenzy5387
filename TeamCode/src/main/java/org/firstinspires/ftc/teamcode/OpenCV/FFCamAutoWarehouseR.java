@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.EncodersAutonomous;
+package org.firstinspires.ftc.teamcode.OpenCV;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
@@ -16,59 +16,71 @@ import org.openftc.easyopencv.OpenCvCameraFactory;
 import org.openftc.easyopencv.OpenCvCameraRotation;
 import org.openftc.easyopencv.OpenCvInternalCamera;
 
-@Autonomous(name="Hub and Park Blue", group="LinearOpMode")
-public class  FFAutoWarehouseB extends LinearOpMode {
+@Autonomous(name="Cam Hub and Park Red", group="LinearOpMode")
+public class FFCamAutoWarehouseR extends LinearOpMode {
     FFRobot robot = new FFRobot();
     final int tickspertile = FieldMeasurements.getTicksPerTile();
     OpenCvCamera cam;
+    BarcodeDetector detector = new BarcodeDetector(telemetry); //barcode
+    BarcodeDetector.Location snapshot;
     private ElapsedTime runtime = new ElapsedTime();
     int stage = 3;
 
     @Override
     public void runOpMode() throws InterruptedException {
-//        int camID = hardwareMap.appContext.getResources()
-//                .getIdentifier("camID", "id", hardwareMap.appContext.getPackageName());
-//        cam = OpenCvCameraFactory.getInstance()
-//                .createInternalCamera(OpenCvInternalCamera.CameraDirection.FRONT, camID);
-//
-//        BarcodeDetector detector = new BarcodeDetector(telemetry); //barcode
-//        cam.setPipeline(detector);
-//        cam.openCameraDeviceAsync(new OpenCvCamera.AsyncCameraOpenListener() {
-//            @Override
-//            public void onOpened() {
-//                cam.startStreaming(320, 240, OpenCvCameraRotation.UPSIDE_DOWN);
-//            }
-//            @Override
-//            public void onError(int errorCode) {
-//
-//            }
-//        });
-//
-
         telemetry.addData("Status", "Initialized");
         telemetry.update();
         robot.init(hardwareMap);
 
-        waitForStart();
-        runtime.reset();
-//        if (detector.getLocation() == BarcodeDetector.Location.RIGHT) {
-//            stage = 1;
-//        } else if (detector.getLocation() == BarcodeDetector.Location.MIDDLE) {
-//            stage = 2;
-//        } else if (detector.getLocation() == BarcodeDetector.Location.LEFT) {
-//            stage = 3;
-//        } else {
-//            stage = 3;
-//        }
+        int camID = hardwareMap.appContext.getResources()
+                .getIdentifier("camID", "id", hardwareMap.appContext.getPackageName());
+        cam = OpenCvCameraFactory.getInstance()
+                .createInternalCamera(OpenCvInternalCamera.CameraDirection.FRONT, camID);
 
+        cam.setPipeline(detector);
+        cam.openCameraDeviceAsync(new OpenCvCamera.AsyncCameraOpenListener() {
+            @Override
+            public void onOpened() {
+                cam.startStreaming(320, 240, OpenCvCameraRotation.UPSIDE_DOWN);
+            }
+            @Override
+            public void onError(int errorCode) {
+                telemetry.addData("Error code: ", errorCode);
+                telemetry.update();
+            }
+        });
+
+        while(!isStarted() && !isStopRequested()) {
+            telemetry.addData("Current pos: ", detector.getAnalysis());
+            telemetry.update();
+            sleep(50);
+        }
+        //start
+        runtime.reset();
+
+        snapshot = detector.getLocation();
+        cam.stopStreaming();
+
+        if (snapshot == BarcodeDetector.Location.RIGHT) {
+            stage = 1;
+        } else if (snapshot == BarcodeDetector.Location.MIDDLE) {
+            stage = 2;
+        } else if (snapshot == BarcodeDetector.Location.LEFT) {
+            stage = 3;
+        } else {
+            stage = 3;
+        }
+        robot.init(hardwareMap);
         robot.setArmPos(0.5);
+        telemetry.addData("Stage set to: ", stage);
+        telemetry.update();
 
         robot.setLinearPower(1);
         sleep(100);
         robot.setLinearPower(0);
 
         robot.driveTo(100);
-        robot.strafe(0.5);
+        robot.strafe(-0.5);
         doFor(1200);
         robot.driveTo((tickspertile / 2) - 250);
         robot.brake();
@@ -101,12 +113,14 @@ public class  FFAutoWarehouseB extends LinearOpMode {
 
 
         //turns and goes into warehouse
-        robot.leftPow(0.5);
-        robot.rightPow(-0.5);
-        doFor(robot.timeForTurn(93));
-        robot.strafe(-0.5);
-        doFor(1900);
+        robot.leftPow(-0.5);
+        robot.rightPow(0.5);
+        doFor(robot.timeForTurn(90));
+        robot.strafe(0.5);
+        doFor(1950);
         robot.driveTo(3000);
+
+
     }
 
     public void doFor(long ms) {
@@ -121,11 +135,6 @@ public class  FFAutoWarehouseB extends LinearOpMode {
 
     public void doFor() {
         this.doFor(1000);
-    }
 
-    public void slamBrake() {
-        robot.reverse();
-        sleep(10);
-        robot.brake();
     }
 }

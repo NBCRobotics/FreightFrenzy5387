@@ -21,6 +21,8 @@ public class FFAutoWarehouseR extends LinearOpMode {
     FFRobot robot = new FFRobot();
     final int tickspertile = FieldMeasurements.getTicksPerTile();
     //OpenCvCamera cam;
+    //BarcodeDetector detector = new BarcodeDetector(telemetry); //barcode
+   // BarcodeDetector.Location snapshot;
     private ElapsedTime runtime = new ElapsedTime();
     int stage = 3;
 
@@ -35,7 +37,6 @@ public class FFAutoWarehouseR extends LinearOpMode {
 //        cam = OpenCvCameraFactory.getInstance()
 //                .createInternalCamera(OpenCvInternalCamera.CameraDirection.FRONT, camID);
 //
-//        BarcodeDetector detector = new BarcodeDetector(telemetry); //barcode
 //        cam.setPipeline(detector);
 //        cam.openCameraDeviceAsync(new OpenCvCamera.AsyncCameraOpenListener() {
 //            @Override
@@ -44,24 +45,37 @@ public class FFAutoWarehouseR extends LinearOpMode {
 //            }
 //            @Override
 //            public void onError(int errorCode) {
-//
+//                telemetry.addData("Error code: ", errorCode);
+//                telemetry.update();
 //            }
 //        });
-
-//        if (detector.getLocation() == BarcodeDetector.Location.RIGHT) {
+//
+//        while(!isStarted() && !isStopRequested()) {
+//            telemetry.addData("Current pos: ", detector.getAnalysis());
+//            telemetry.update();
+//            sleep(50);
+//        }
+//        //start
+//        runtime.reset();
+//
+//        snapshot = detector.getLocation();
+//        cam.stopStreaming();
+//
+//        if (snapshot == BarcodeDetector.Location.RIGHT) {
 //            stage = 1;
-//        } else if (detector.getLocation() == BarcodeDetector.Location.MIDDLE) {
+//        } else if (snapshot == BarcodeDetector.Location.MIDDLE) {
 //            stage = 2;
-//        } else if (detector.getLocation() == BarcodeDetector.Location.LEFT) {
+//        } else if (snapshot == BarcodeDetector.Location.LEFT) {
 //            stage = 3;
 //        } else {
 //            stage = 3;
 //        }
-
-        robot.setArmPos(0.5);
-
         waitForStart();
         runtime.reset();
+        //robot.init(hardwareMap);
+        robot.setArmPos(0.5);
+        telemetry.addData("Stage set to: ", stage);
+        telemetry.update();
 
         robot.setLinearPower(1);
         sleep(100);
@@ -69,8 +83,8 @@ public class FFAutoWarehouseR extends LinearOpMode {
 
         robot.driveTo(100);
         robot.strafe(-0.5);
-        doFor(1200);
-        robot.driveTo((tickspertile / 2) - 250);
+        doFor(900);
+        robot.driveTo(750);
         robot.brake();
 
         sleep(100);
@@ -81,14 +95,14 @@ public class FFAutoWarehouseR extends LinearOpMode {
         sleep(100);
         robot.setLinearPower(0);
 
-        robot.driveTo(200);
+        robot.driveTo(150);
         //aligned with hub
 
         robot.turnIntake(0.65);
         sleep(2000);
         robot.turnIntake(0);
 
-        robot.driveTo(-200);
+        robot.driveTo(-150);
         sleep(100);
         robot.setLinearPower(-1);
         while(robot.getSlideEncoder() > robot.getMin()) {
@@ -105,8 +119,8 @@ public class FFAutoWarehouseR extends LinearOpMode {
         robot.rightPow(0.5);
         doFor(robot.timeForTurn(90));
         robot.strafe(0.5);
-        doFor(1950);
-        robot.driveTo(3000);
+        doFor(1650);
+        robot.driveTo(2500);
 
 
     }

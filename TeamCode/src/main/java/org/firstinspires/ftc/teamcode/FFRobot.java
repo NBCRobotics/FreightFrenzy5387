@@ -11,6 +11,7 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.util.Range;
 
 import java.lang.reflect.Field;
 
@@ -22,17 +23,19 @@ public class FFRobot {
     private DcMotor flDrive = null;
     private DcMotor frDrive = null;
     private DcMotor intake = null;
+    public double leftPower;
+    public double rightPower;
 
     private DcMotor linearSlide = null;//Tesrng btiyuc
     private DcMotor carousel = null;
     private Servo arm = null;
 
     private int zero = 0;   //linear slide encoders
-    private final int MAX = 8000;
+    private final int MAX = 4100;
     private final int MIN = 0;
     private int currentMax = MAX;
     private int currentMin = MIN;
-    private int initPos;
+    private int lastPos = 0;
 
     private int stageTwo = FieldMeasurements.getStageHeight(1);
     private int stageOne = FieldMeasurements.getStageHeight(2);
@@ -50,6 +53,7 @@ public class FFRobot {
     private double frontRightPower;
     private double backLeftPower;
     private double backRightPower;
+    private double lastDrivePos;
 
     public void init(HardwareMap hwdMap){
 
@@ -64,6 +68,7 @@ public class FFRobot {
 
         //intake.resetDeviceConfigurationForOpMode();
 
+
         this.blDrive.setDirection(motF);
         this.brDrive.setDirection(motR);
         this.flDrive.setDirection(motF);
@@ -72,8 +77,14 @@ public class FFRobot {
         this.arm.setDirection(serR);
         this.linearSlide.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         this.linearSlide.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        this.linearSlide.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        this.flDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        this.frDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        this.blDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        this.brDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
     }
 
+    //auto drive methods
     public void leftPow(double pow){
         this.blDrive.setPower(-pow);
         this.flDrive.setPower(-pow);
@@ -82,13 +93,29 @@ public class FFRobot {
         this.brDrive.setPower(-pow);
         this.frDrive.setPower(-pow);
     }
+
     public void drive(double lPow, double rPow){
         this.leftPow(lPow);
         this.rightPow(rPow);
     }
 
     public void drive(double bothPow){ //override of drive(double, double)
-        this.drive(bothPow,bothPow);
+        drive(bothPow, bothPow);
+    }
+
+    public void strafe(double pow){ //Pos = right , Neg = left
+        blDrive.setPower(-pow);
+        flDrive.setPower(pow);
+        brDrive.setPower(pow);
+        frDrive.setPower(-pow);
+    }
+
+    public void strafe(String s, double pow) {
+        pow = Math.abs(pow);
+        if (s.equals("right"))
+            this.strafe(pow);
+        else if (s.equals("left"))
+            this.strafe(-pow);
     }
 
     public void driveTo(int pos) {
@@ -121,10 +148,40 @@ public class FFRobot {
         setDriveMode(DcMotor.RunMode.RUN_USING_ENCODER);
     }
 
-    public int timeForTurn(int angle) {
-        return (angle*1800/180);
+    public void strafeTo(int pos) {
+        setDriveMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        setDriveMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        setDriveMode(DcMotor.RunMode.RUN_TO_POSITION);
+        setTargetPos(pos);
+        if (pos > 0) {
+            strafe(0.5);
+            while(flDrive.getCurrentPosition() < pos) {
+                double diff = (Math.abs((flDrive.getCurrentPosition()) - Math.abs(frDrive.getCurrentPosition())) * 0.0015);
+                frDrive.setPower(-0.5 + diff);
+                diff = (Math.abs((flDrive.getCurrentPosition()) - Math.abs(brDrive.getCurrentPosition())) * 0.0015);
+                brDrive.setPower(0.5 + diff);
+                diff = (Math.abs((flDrive.getCurrentPosition()) - Math.abs(blDrive.getCurrentPosition())) * 0.0015);
+                blDrive.setPower(-0.5 + diff);
+            }
+        }
+        if (pos < 0) {
+            strafe(-0.5);
+            while(flDrive.getCurrentPosition() > pos) {
+                double diff = (Math.abs((flDrive.getCurrentPosition()) - Math.abs(frDrive.getCurrentPosition())) * 0.0015);
+                frDrive.setPower(0.5 + diff);
+                diff = (Math.abs((flDrive.getCurrentPosition()) - Math.abs(brDrive.getCurrentPosition())) * 0.0015);
+                brDrive.setPower(-0.5 + diff);
+                diff = (Math.abs((flDrive.getCurrentPosition()) - Math.abs(blDrive.getCurrentPosition())) * 0.0015);
+                blDrive.setPower(0.5 + diff);
+            }
+        }
+        brake();
+        setDriveMode(DcMotor.RunMode.RUN_USING_ENCODER);
     }
 
+    public int timeForTurn(int angle) {
+        return (angle*1700/180);
+    }
 
     public void setTargetPos(int pos) {
         flDrive.setTargetPosition(pos);
@@ -139,24 +196,24 @@ public class FFRobot {
         this.frDrive.setMode(mode);
     }
 
-
-    public void strafe(double pow){ //Pos = left , Neg = right
-        blDrive.setPower(-pow); //MOTF
-        flDrive.setPower(pow); //MOTF
-        brDrive.setPower(pow); //MOTR
-        frDrive.setPower(-pow); //MOTR       //A:WAYS INPUT 1 LMAO
+    public void brake() {
+        this.drive(0.0);
     }
 
-    public void strafe(String s, double pow) {
-        pow = Math.abs(pow);
-        if (s.equals("right"))
-            this.strafe(pow);
-        else if (s.equals("left"))
-            this.strafe(-pow);
+    public void reverse() {
+        double flPow = flDrive.getPower();
+        double frPow = frDrive.getPower();
+        double blPow = blDrive.getPower();
+        double brPow = brDrive.getPower();
+        flDrive.setPower(-flPow);
+        frDrive.setPower(-frPow);
+        brDrive.setPower(-brPow);
+        blDrive.setPower(-blPow);
     }
 
-    public void mechanumPov(Gamepad gp, Gamepad gp2){
+    //teleop methods
 
+    public void mechanumPov(Gamepad gp, Gamepad gp2) {
         drive = (-gp.left_stick_y);
         strafe = (gp.left_stick_x);
         turn = (gp.right_stick_x);
@@ -173,7 +230,7 @@ public class FFRobot {
         backRightPower = (drive + strafe - turn);
 
         //to slow down the drive if needed
-        double slowDown = gp.left_bumper ? 4.0 : 1.0;
+        double slowDown = gp.left_bumper ? 8.0 : 1.0;
         slowDown = gp.right_bumper ? 2.0 : slowDown;
 
         this.flDrive.setPower((frontLeftPower)/(slowDown));
@@ -181,21 +238,8 @@ public class FFRobot {
         this.frDrive.setPower((frontRightPower)/(slowDown));
         this.brDrive.setPower((backRightPower)/(slowDown));
 
-//        double slowDownMedium = gp.right_bumper ? 4.0 : 1.0;
 
-        /*
 
-        this.flDrive.setPower((frontLeftPower)/(slowDownMedium));
-        this.blDrive.setPower((backLeftPower)/(slowDownMedium));
-        this.frDrive.setPower((frontRightPower)/(slowDownMedium));
-        this.brDrive.setPower((backRightPower)/(slowDownMedium));
-        */
-
-        intake(gp2);
-        linearPower(gp2);
-        armPower(gp2);
-        carouselPower(gp);
-        dpadDrive(gp);
     }
 
     public double getFrontLeftPower(){
@@ -214,6 +258,7 @@ public class FFRobot {
     public double getLinearPower(){return linearSlide.getPower();}
     public double getCarouselPower(){return carousel.getPower();}
 
+    //auto methods for control
     public void setCarouselPower(double pow){
         carousel.setPower(pow);
     }
@@ -235,10 +280,6 @@ public class FFRobot {
 
     public void turnIntake(double pow){
         intake.setPower(pow);
-    }
-
-    public void brake(){
-        this.drive(0.0);
     }
 
     public void setArmPos(double pow) { arm.setPosition(pow); }
@@ -265,13 +306,7 @@ public class FFRobot {
         } else {
             brake();
         }
-
-        //if that doesn't work uncomment this stuff cause i think this might work
-//        drive = gp.dpad_up ? -1.0 : gp.dpad_down ? 1.0 : 0.0;
-//        strafe = gp.dpad_left ? -1.0 : gp.dpad_right ? 1.0 : 0.0;
     }
-
-
 
     //GamePad 2 Methods
     public void intake(Gamepad gp) { //negative is push out || positive is take in
@@ -301,12 +336,34 @@ public class FFRobot {
             currentMax = MAX;
         }
 
-        if(getSlideEncoder() >= currentMax && gp.left_stick_y < 0)
-            linearSlide.setPower(0);
-        else if (isMin() && gp.left_stick_y > 0)
-            linearSlide.setPower(0);
-        else
-            linearSlide.setPower(gp.left_stick_y);
+//        if (getSlideEncoder() > currentMax || getSlideEncoder() < currentMin) {
+//
+//        }
+
+        //else {
+            if (gp.left_stick_y == 0) {
+//                double offsetPow;
+//                if (getSlideEncoder() < lastPos) {
+//                    offsetPow = lastPos - getSlideEncoder() * 0.0015;
+//                } else if (getSlideEncoder() > lastPos) {
+//                    offsetPow = lastPos - getSlideEncoder() * 0.0005;
+//                } else {
+//                    offsetPow = 0;
+//                }
+                linearSlide.setPower(0);
+            }
+            else {
+                if(getSlideEncoder() >= currentMax && gp.left_stick_y < 0)
+                    linearSlide.setPower(0);
+                else if (isMin() && gp.left_stick_y > 0)
+                    linearSlide.setPower(0);
+                else
+                    linearSlide.setPower(gp.left_stick_y);
+            }
+//        }
+
+        lastPos = getSlideEncoder();
+
     }
 
 

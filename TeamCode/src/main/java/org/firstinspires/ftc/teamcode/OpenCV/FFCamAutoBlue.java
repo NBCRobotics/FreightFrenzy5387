@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.EncodersAutonomous;
+package org.firstinspires.ftc.teamcode.OpenCV;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
@@ -14,58 +14,63 @@ import org.openftc.easyopencv.OpenCvInternalCamera;
 
 //Made by Andrew Hu
 
-@Autonomous(name="Carousel and Park Blue", group="LinearOpMode")
+@Autonomous(name="Cam Carousel and Park Blue", group="LinearOpMode")
 //@Disabled
 //RED
-public class FFAutoBlue extends LinearOpMode {
+public class FFCamAutoBlue extends LinearOpMode {
     FFRobot robot = new FFRobot();
     //BLUE means the carousel is to the RIGHT of the robot
     //Drop at proper stage, go to carousel, park in blue square
     private ElapsedTime runtime = new ElapsedTime();
     int stage = 3;
     final int tickspertile = FieldMeasurements.getTicksPerTile();
+    BarcodeDetector.Location snapshot;
 
     OpenCvCamera cam;
 
     @Override
     public void runOpMode() {
 
-//
-//        int camID = hardwareMap.appContext.getResources()
-//                .getIdentifier("camID", "id", hardwareMap.appContext.getPackageName());
-//        cam = OpenCvCameraFactory.getInstance()
-//                .createInternalCamera(OpenCvInternalCamera.CameraDirection.FRONT, camID);
-//
-//        BarcodeDetector detector = new BarcodeDetector(telemetry); //barcode
-//        cam.setPipeline(detector);
-//        cam.openCameraDeviceAsync(new OpenCvCamera.AsyncCameraOpenListener() {
-//            @Override
-//            public void onOpened() {
-//                cam.startStreaming(320, 240, OpenCvCameraRotation.UPSIDE_DOWN);
-//            }
-//            @Override
-//            public void onError(int errorCode) {
-//
-//            }
-//        });
-//
-//        if (detector.getLocation() == BarcodeDetector.Location.RIGHT) {
-//            stage = 1;
-//        } else if (detector.getLocation() == BarcodeDetector.Location.MIDDLE) {
-//            stage = 2;
-//        } else if (detector.getLocation() == BarcodeDetector.Location.LEFT) {
-//            stage = 3;
-//        } else {
-//            stage = 3;
-//        }
-//
-//        waitForStart();
-//        runtime.reset();
-//        robot.init(hardwareMap);
+
+        int camID = hardwareMap.appContext.getResources()
+                .getIdentifier("camID", "id", hardwareMap.appContext.getPackageName());
+        cam = OpenCvCameraFactory.getInstance()
+                .createInternalCamera(OpenCvInternalCamera.CameraDirection.FRONT, camID);
+
+        BarcodeDetector detector = new BarcodeDetector(telemetry); //barcode
+        cam.setPipeline(detector);
+        cam.openCameraDeviceAsync(new OpenCvCamera.AsyncCameraOpenListener() {
+            @Override
+            public void onOpened() {
+                cam.startStreaming(320, 240, OpenCvCameraRotation.UPSIDE_DOWN);
+            }
+            @Override
+            public void onError(int errorCode) {
+
+            }
+        });
+        robot.init(hardwareMap);
+
+        while(!isStarted() && !isStopRequested()) {
+            telemetry.addData("Status: ", detector.getAnalysis());
+            telemetry.update();
+            sleep(50);
+        }
+        //start
+        snapshot = detector.getLocation();
+
+        if (snapshot == BarcodeDetector.Location.RIGHT) {
+            stage = 1;
+        } else if (snapshot == BarcodeDetector.Location.MIDDLE) {
+            stage = 2;
+        } else if (snapshot == BarcodeDetector.Location.LEFT) {
+            stage = 3;
+        } else {
+            stage = 3;
+        }
 
         telemetry.addData("Status", "Initialized");
         telemetry.update();
-        robot.init(hardwareMap);
 
         robot.setArmPos(0.5);
 
@@ -75,8 +80,8 @@ public class FFAutoBlue extends LinearOpMode {
 
         robot.driveTo(100);
         robot.strafe(-0.5);
-        doFor(1000);
-        robot.driveTo(750);
+        doFor(1200);
+        robot.driveTo((tickspertile/2)-250);
 
         //raise up
         sleep(100);

@@ -20,7 +20,13 @@ public class FFTeleOp extends OpMode {
     @Override
     public void loop() {
         robot.mechanumPov(gamepad1,gamepad2);
+        robot.intake(gamepad2);
+        robot.linearPower(gamepad2);
+        robot.armPower(gamepad2);
+        robot.carouselPower(gamepad1);
+        robot.dpadDrive(gamepad1);
         //robot.setArm(0.5); ??? lol
+        telemetry.addData("Motors", "left (%.2f), right (%.2f)", robot.leftPower, robot.rightPower);
         telemetry.addData("Drive Motors: ", "\nFront Left: " +robot.getFrontLeftPower()+
                 "\n Back Left: " + robot.getBackLeftPower() + "\nFront Right" + robot.getFrontRightPower() +
                 "\nBack Right: " + robot.getBackRightPower());

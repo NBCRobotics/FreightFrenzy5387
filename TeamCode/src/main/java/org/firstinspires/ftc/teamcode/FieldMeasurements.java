@@ -12,9 +12,9 @@ public class FieldMeasurements {
     private static final double ticksPerTile  = (609.6 * 1440) / (diameter * 3.14);
 
     public static final long TIME_FOR_TILE = 1075; //in MS
-    private static final int STAGEONE_HEIGHT = 3300;    //IN TICKS
-    private static final int STAGETWO_HEIGHT = 5300;   //IN TICKS
-    private static final int STAGETHREE_HEIGHT = 7500;
+    private static final int STAGEONE_HEIGHT = 1000;    //IN TICKS
+    private static final int STAGETWO_HEIGHT = 2000;   //IN TICKS
+    private static final int STAGETHREE_HEIGHT = 3750;
     private static final double circumfrence = 3.61;
 
     public static int getStageHeight(int stage) {

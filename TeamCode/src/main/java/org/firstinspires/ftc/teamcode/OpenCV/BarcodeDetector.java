@@ -26,9 +26,9 @@ public class BarcodeDetector extends OpenCvPipeline {
         UNKNOWN //also unknwon
     }
     private Location location;
-    static final Rect RIGHT_ROI = new Rect(new Point(150, 40), new Point(190, 80));
-    static final Rect MIDDLE_ROI = new Rect(new Point(50, 40), new Point(90, 80));
-    static final Rect LEFT_ROI = new Rect(new Point(0, 40), new Point(20, 80));
+    static final Rect RIGHT_ROI = new Rect(new Point(150, 80), new Point(190, 120));
+    static final Rect MIDDLE_ROI = new Rect(new Point(50, 80), new Point(90, 120));
+    static final Rect LEFT_ROI = new Rect(new Point(0, 80), new Point(20, 120));
 
     //looks for team shipping element pos
     @Override
@@ -84,4 +84,17 @@ public class BarcodeDetector extends OpenCvPipeline {
         return location;
     }
 
+    public String getAnalysis() {
+        String text = "";
+        if (location == Location.LEFT) {
+            text += "Shipping element on the left square";
+        } else if (location == Location.MIDDLE) {
+            text += "Shipping element on the middle square";
+        } else if (location == Location.RIGHT) {
+            text += "Shipping element on the right square";
+        } else {
+            text += "unknown pos";
+        }
+        return text;
+    }
 }
